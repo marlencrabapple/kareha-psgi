@@ -120,6 +120,7 @@ else
 }
 
 release_log($log);
+CGI::initialize_globals();
 
 if($query->param("r")) { make_http_forward($ENV{HTTP_REFERER},ALTERNATE_REDIRECT) }
 else { make_http_forward(HTML_SELF,ALTERNATE_REDIRECT) }
