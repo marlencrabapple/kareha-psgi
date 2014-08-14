@@ -15,8 +15,8 @@ BEGIN { require 'templates.pl'; }
 BEGIN { require 'captcha.pl'; }
 BEGIN { require 'wakautils.pl'; }
 
-return 1 if(caller);
-
+#return 1 if(caller);
+return 1 if((caller)[1]=~/admin\.pl$/);
 
 
 #
@@ -32,7 +32,7 @@ our $replyrange_re=qr{n?(?:[0-9\-,lrq]|&#44;)*[0-9\-lrq]}; # regexp to match rep
 our $protocol_re=protocol_regexp();
 our $url_re=url_regexp();
 
-our $query=new CGI;
+our $query=CGI->new;
 our $task=$query->param("task");
 
 # Rebuild main page if it doesn't exist
@@ -1208,6 +1208,8 @@ sub encode_admin_pass($)
 sub make_error($)
 {
 	my ($error)=@_;
+
+	CGI::initialize_globals();
 
 	print "Content-Type: ".get_xhtml_content_type(CHARSET,USE_XHTML)."\n";
 	print "\n";
