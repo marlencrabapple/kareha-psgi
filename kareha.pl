@@ -28,12 +28,12 @@ $stylesheets=get_stylesheets();
 $markup_formats=[map +{id=>$_},MARKUP_FORMATS];
 use strict;
 
-my $replyrange_re=qr{n?(?:[0-9\-,lrq]|&#44;)*[0-9\-lrq]}; # regexp to match reply ranges for >> links
-my $protocol_re=protocol_regexp();
-my $url_re=url_regexp();
+our $replyrange_re=qr{n?(?:[0-9\-,lrq]|&#44;)*[0-9\-lrq]}; # regexp to match reply ranges for >> links
+our $protocol_re=protocol_regexp();
+our $url_re=url_regexp();
 
-my $query=new CGI;
-my $task=$query->param("task");
+our $query=new CGI;
+our $task=$query->param("task");
 
 # Rebuild main page if it doesn't exist
 unless(-e HTML_SELF)
@@ -49,7 +49,7 @@ if(!$task)
 	exit 0;
 }
 
-my $log=lock_log();
+our $log=lock_log();
 
 if($task eq "post")
 {

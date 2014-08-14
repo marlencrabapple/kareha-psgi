@@ -106,10 +106,10 @@ use constant GLOBAL_HEAD_INCLUDE => q{
 <head>
 <title><if $title><var $title> - </if><const TITLE></title>
 <meta http-equiv="Content-Type" content="text/html;charset=<const CHARSET>" />
-<link rel="shortcut icon" href="<const expand_filename(FAVICON)>" />
+<link rel="shortcut icon" href="<var expand_filename(FAVICON)>" />
 
 <if RSS_FILE>
-<link rel="alternate" title="RSS feed" href="<const expand_filename(RSS_FILE)>" type="application/rss+xml" />
+<link rel="alternate" title="RSS feed" href="<var expand_filename(RSS_FILE)>" type="application/rss+xml" />
 </if>
 
 <loop $stylesheets>
@@ -123,7 +123,7 @@ var markup_descriptions={
 <loop $markup_formats><var $id>:<var js_string(S_DESCRIBE_FORMATS-\>{$id})>,</loop>dummy:''
 };
 </script>
-<script type="text/javascript" src="<const expand_filename(JS_FILE)>"></script>
+<script type="text/javascript" src="<var expand_filename(JS_FILE)>"></script>
 <script type="text/javascript">require_script_version("3.a");</script>
 </head>
 };
@@ -163,7 +163,7 @@ use constant POSTING_FORM_TEMPLATE => compile_template(q{
 	<td><const S_CAPTCHA></td>
 	<td>
 		<input type="text" name="captcha" size="19" />
-		<img class="<var $captchaclass>" src="<const expand_filename('captcha.pl')>?selector=.<var $captchaclass>" />
+		<img class="<var $captchaclass>" src="<var expand_filename('captcha.pl')>?selector=.<var $captchaclass>" />
 	</td>
 </tr></if>
 
@@ -245,7 +245,7 @@ use constant MAIN_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 
 <div id="threadlinks">
 <a href="#newthread"><const S_NEWTHREAD_TITLE></a>
-<a href="<const expand_filename(HTML_BACKLOG)>"><const S_ALLTHREADS></a>
+<a href="<var expand_filename(HTML_BACKLOG)>"><const S_ALLTHREADS></a>
 </div>
 
 </div></div>
@@ -341,7 +341,7 @@ use constant THREAD_HEAD_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 
 <div id="navigation">
 <strong><const S_NAVIGATION></strong>
-<a href="<const expand_filename(HTML_SELF)>"><const S_RETURN></a>
+<a href="<var expand_filename(HTML_SELF)>"><const S_RETURN></a>
 <a href="<var $self>/<var $thread>/"><const S_ENTIRE></a>
 <a href="<var $self>/<var $thread>/-100" rel="nofollow"><const S_FIRST100></a>
 <loop [map {+{'start'=\>$_*100+1}} (1..($postcount-1)/100)]>
@@ -380,7 +380,7 @@ use constant THREAD_FOOT_TEMPLATE => compile_template( q{
 <tr>
 	<td></td>
 	<td><div class="threadlinks">
-	<a href="<const expand_filename(HTML_SELF)>"><const S_RETURN></a>
+	<a href="<var expand_filename(HTML_SELF)>"><const S_RETURN></a>
 	<a href="<var $self>/<var $thread>/"><const S_ENTIRE></a>
 	<if $prevpost><a href="<var $self>/<var $thread>/<var $prevpost\>99?$prevpost-99:1>-<var $prevpost>" rel="nofollow"><const S_PREV100></a></if>
 	<if $nextpost><a href="<var $self>/<var $thread>/<var $nextpost>-<var $nextpost<$postcount-99?$nextpost+99:$postcount>" rel="nofollow"><const S_NEXT100></a></if>
@@ -459,7 +459,7 @@ use constant BACKLOG_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 
 <div id="navigation">
 <strong><const S_NAVIGATION></strong>
-<a href="<const expand_filename(HTML_SELF)>"><const S_RETURN></a>
+<a href="<var expand_filename(HTML_SELF)>"><const S_RETURN></a>
 </div>
 
 <div id="threads">

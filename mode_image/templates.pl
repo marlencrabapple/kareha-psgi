@@ -83,7 +83,7 @@ use constant NORMAL_HEAD_INCLUDE => q{
 <head>
 <title><if $title><var $title> - </if><const TITLE></title>
 <meta http-equiv="Content-Type" content="text/html;charset=<const CHARSET>" />
-<link rel="shortcut icon" href="<const expand_filename(FAVICON)>" />
+<link rel="shortcut icon" href="<var expand_filename(FAVICON)>" />
 
 <style type="text/css">
 body { margin: 0; padding: 12px; margin-bottom: auto; }
@@ -105,7 +105,7 @@ form { margin-bottom: 0px }
 </loop>
 
 <script type="text/javascript">var style_cookie="<const STYLE_COOKIE>";</script>
-<script type="text/javascript" src="<const expand_filename(JS_FILE)>"></script>
+<script type="text/javascript" src="<var expand_filename(JS_FILE)>"></script>
 <script type="text/javascript">require_script_version("3.a");</script>
 </head>
 <if $thread><body class="replypage"></if>
