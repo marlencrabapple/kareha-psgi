@@ -5,7 +5,7 @@ kareha-psgi
 This is the same Kareha you all know and love with a potentially huge speed boost.
 
 ## How To Use ##
-1. Grab Kareha from this repo
+1. Grab Kareha from this repo.
 
         $ git clone https://github.com/marlencrabapple/kareha-psgi.git
 
