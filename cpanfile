@@ -1,6 +1,9 @@
 requires 'CGI'; # this will be removed from the core modules in v5.22 so it
                 # will probably need downloading from cpan at some point
-                
+
+requires 'CGI::Compile';
+requires 'CGI::Emulate::PSGI';
+
 requires 'Plack';
 requires 'Plack::Builder';
 requires 'Plack::App::File';
