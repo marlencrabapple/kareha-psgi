@@ -2,7 +2,7 @@ kareha-psgi
 ===========
 
 ## Intro ##
-This is the same Kareha you all know and love with a potentially huge speed boost.
+This is the same Kareha you know and love with a potentially huge speed boost.
 
 ## How To Use ##
 1. Grab Kareha from this repo.
