@@ -1198,12 +1198,12 @@ sub make_thumbnail($$$$$;$)
 	# first try GraphicsMagick
 	my $method = ($filename =~ /\.gif$/) ? '-coalesce -sample' : '-resize';
 	`gm convert $filename $method ${width}x${height}! -quality $quality $thumbnail`;
-	print STDERR "gm" && return 2 unless($?);
+	return 2 unless($?);
 
 	# then ImageMagick
 	$convert = "convert" unless($convert);
 	`$convert $filename $method ${width}x${height}! -quality $quality $thumbnail`;
-	print STDERR "convert" && return 2 unless($?);
+	 return 2 unless($?);
 
 	# if that fails, try pnmtools instead
 	if($filename=~/\.jpg$/)
