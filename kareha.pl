@@ -1258,7 +1258,7 @@ sub process_file($$$)
 	# generate random filename - fudges the microseconds
 	my $filebase=$time.sprintf("%03d",int(rand(1000)));
 	my $filename=IMG_DIR.$filebase.'.'.$ext;
-	my $thumbnail=THUMB_DIR.$filebase."s.jpg";
+	my $thumbnail=THUMB_DIR.$filebase."s.$ext";
 	$filename.=MUNGE_UNKNOWN unless($known);
 
 	# do copying and MD5 checksum
@@ -1340,9 +1340,14 @@ sub process_file($$$)
 		}
 
 		if(STUPID_THUMBNAILING) { $thumbnail=$filename }
-		else
-		{
-			$thumbnail=undef unless(make_thumbnail($filename,$thumbnail,$tn_width,$tn_height,THUMBNAIL_QUALITY,CONVERT_COMMAND));
+		else {
+			my $tnmethod = make_thumbnail($filename,$thumbnail,$tn_width,$tn_height,THUMBNAIL_QUALITY,CONVERT_COMMAND);
+			if($tnmethod) {
+				$thumbnail = $tnmethod == 1 ? ($thumbnail=~s/$ext/.jpg/) : $thumbnail;
+			}
+			else {
+				$thumbnail = undef;
+			}
 		}
 	}
 	else

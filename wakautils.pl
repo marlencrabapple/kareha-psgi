@@ -712,7 +712,7 @@ sub process_tripcode($;$$$$)
 	{
 		my ($namepart,$marker,$trippart)=($1,$2,$3);
 		my $trip;
-	
+
 		$namepart=decode_string($namepart,$charset) unless $nonamedecoding;
 		$namepart=clean_string($namepart);
 
@@ -737,7 +737,7 @@ sub process_tripcode($;$$$$)
 		$trippart=clean_string($trippart);
 		my $salt=substr $trippart."H..",1,2;
 		$salt=~s/[^\.-z]/./g;
-		$salt=~tr/:;<=>?@[\\]^_`/ABCDEFGabcdef/; 
+		$salt=~tr/:;<=>?@[\\]^_`/ABCDEFGabcdef/;
 		$trip=$tripkey.(substr crypt($trippart,$salt),-10).$trip;
 
 		return ($namepart,$trip);
@@ -1141,7 +1141,7 @@ sub analyze_jpeg($)
 			last if($mark==0xda or $mark==0xd9);  # SOS/EOI
 			die "Possible virus in image" if($size<2); # MS GDI+ JPEG exploit uses short chunks
 
-			if($mark>=0xc0 and $mark<=0xc2) # SOF0..SOF2 - what the hell are the rest? 
+			if($mark>=0xc0 and $mark<=0xc2) # SOF0..SOF2 - what the hell are the rest?
 			{
 				last unless(read($file,$buffer,5)==5);
 				my ($bits,$height,$width)=unpack("Cnn",$buffer);
@@ -1195,18 +1195,17 @@ sub make_thumbnail($$$$$;$)
 {
 	my ($filename,$thumbnail,$width,$height,$quality,$convert)=@_;
 
-	# first try ImageMagick
+	# first try GraphicsMagick
+	my $method = ($filename =~ /\.gif$/) ? '-coalesce -sample' : '-resize';
+	`gm convert $filename $method ${width}x${height}! -quality $quality $thumbnail`;
+	print STDERR "gm" && return 2 unless($?);
 
-	my $magickname=$filename;
-	$magickname.="[0]" if($magickname=~/\.gif$/);
-
-	$convert="convert" unless($convert);
-	`$convert -background white -flatten -size ${width}x${height} -geometry ${width}x${height}! -quality $quality $magickname $thumbnail`;
-
-	return 1 unless($?);
+	# then ImageMagick
+	$convert = "convert" unless($convert);
+	`$convert $filename $method ${width}x${height}! -quality $quality $thumbnail`;
+	print STDERR "convert" && return 2 unless($?);
 
 	# if that fails, try pnmtools instead
-
 	if($filename=~/\.jpg$/)
 	{
 		`djpeg $filename | pnmscale -width $width -height $height | cjpeg -quality $quality > $thumbnail`;
@@ -1234,10 +1233,11 @@ sub make_thumbnail($$$$$;$)
 	eval 'use Image::Magick';
 	unless($@)
 	{
-		my ($res,$magick);
+		my ($res,$magick,$magickname);
 
+		$magickname=$filename;
+		$magickname.="[0]" if($magickname=~/\.gif$/);
 		$magick=Image::Magick->new;
-
 		$res=$magick->Read($magickname);
 		return 0 if "$res";
 		$res=$magick->Scale(width=>$width, height=>$height);
@@ -1342,7 +1342,7 @@ sub setup_rc6($)
 		$A=$S[$i]=rol(add($S[$i],$A,$B),3);
 		$B=$L[$j]=rol(add($L[$j]+$A+$B),add($A+$B));
 		$i=($i+1)%@S;
-		$j=($j+1)%@L;	
+		$j=($j+1)%@L;
 	}
 }
 
@@ -1366,7 +1366,7 @@ sub encrypt_rc6($)
 
 	$A=add($A,$S[42]);
 	$C=add($C,$S[43]);
-		
+
 	return pack "V4",$A,$B,$C,$D;
 }
 
@@ -1390,7 +1390,7 @@ sub decrypt_rc6($)
 
 	$D=add32($D,-$S[1]);
 	$B=add32($B,-$S[0]);
-		
+
 	return pack "V4",$A,$B,$C,$D;
 }
 
