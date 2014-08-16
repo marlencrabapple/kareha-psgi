@@ -5,11 +5,11 @@ use strict;
 use Time::Local;
 use Socket;
 
-my $has_md5=0;
+our $has_md5=0;
 eval 'use Digest::MD5 qw(md5)';
 $has_md5=1 unless $@;
 
-my $has_encode=0;
+our $has_encode=0;
 eval 'use Encode qw(decode)';
 $has_encode=1 unless $@;
 
@@ -20,8 +20,8 @@ use constant MAX_UNICODE => 1114111;
 # HTML utilities
 #
 
-my $protocol_re=qr{(?:http://|https://|ftp://|mailto:|news:|irc:)};
-my $url_re=qr{(${protocol_re}[^\s<>()"]*?(?:\([^\s<>()"]*?\)[^\s<>()"]*?)*)((?:\s|<|>|"|\.||\]|!|\?|,|&#44;|&quot;)*(?:[\s<>()"]|$))};
+our $protocol_re=qr{(?:http://|https://|ftp://|mailto:|news:|irc:)};
+our $url_re=qr{(${protocol_re}[^\s<>()"]*?(?:\([^\s<>()"]*?\)[^\s<>()"]*?)*)((?:\s|<|>|"|\.||\]|!|\?|,|&#44;|&quot;)*(?:[\s<>()"]|$))};
 
 sub protocol_regexp() { return $protocol_re }
 
