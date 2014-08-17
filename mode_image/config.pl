@@ -41,6 +41,7 @@
 # Image posts
 #use constant ALLOW_IMAGE_THREADS => 1;			# Allow users to create image threads
 #use constant ALLOW_IMAGE_REPLIES => 1;			# Allow users to make image replies
+#use constant ANIMATED_THUMBNAILS => 0;     # Animated .gif thumbnails. This can be a pretty big performance hit, so its disabled by default.
 #use constant ALLOW_WEBM => 0;              # Allow users to upload webms
 #use constant IMAGE_REPLIES_PER_THREAD => 0;	# Number of image replies per thread to show, set to 0 for no limit.
 #use constant MAX_KB => 1000;					# Maximum upload size in KB

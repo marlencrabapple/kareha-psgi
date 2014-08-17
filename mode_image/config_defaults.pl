@@ -43,6 +43,7 @@ BEGIN {
 	# Image posts
 	eval "use constant ALLOW_IMAGE_THREADS => 1" unless(defined &ALLOW_IMAGE_THREADS);
 	eval "use constant ALLOW_IMAGE_REPLIES => 1" unless(defined &ALLOW_IMAGE_REPLIES);
+	eval "use constant ANIMATED_THUMBNAILS => 0" unless(defined &ANIMATED_THUMBNAILS);
 	eval "use constant ALLOW_WEBM => 0" unless(defined &ALLOW_WEBM);
 	eval "use constant IMAGE_REPLIES_PER_THREAD => 0" unless(defined &IMAGE_REPLIES_PER_THREAD);
 	eval "use constant MAX_KB => 1000" unless(defined &MAX_KB);

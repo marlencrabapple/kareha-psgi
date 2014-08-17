@@ -1220,14 +1220,26 @@ sub make_thumbnail($$$$$$;$)
 {
 	my ($filename,$thumbnail,$ext,$width,$height,$quality,$convert)=@_;
 
-	# webm thumbnails
 	# jpg thumbnails are more practical than animated webm ones so we won't bother
-	# with any fancy transcoding
+	# with any fancy transcoding when dealing with webms
 	if($ext eq 'webm') {
 		$thumbnail =~ s/webm/jpg/;
 		my $ffmpeg = FFMPEG_PATH;
 		my $stdout = `$ffmpeg -i $filename -v quiet -ss 00:00:00 -an -vframes 1 -f mjpeg -vf scale=$width:$height $thumbnail 2>&1`;
 		return 1 unless $stdout;
+	}
+
+	# do something else if animated thumbnails are disabled
+	if(($filename =~ /\.gif$/) && (ANIMATED_THUMBNAILS == 0)) {
+		my $magickname = $filename .= "[0]";
+		$thumbnail =~ s/gif/jpg/;
+
+		`gm convert $filename -sample ${width}x${height}! -quality $quality $thumbnail`;
+		return 1 unless $?;
+
+		$convert = "convert" unless($convert);
+		`gm $convert $magickname -flatten -sample ${width}x${height}! -quality $quality $thumbnail`;
+		return 1 unless $?;
 	}
 
 	# first try GraphicsMagick
