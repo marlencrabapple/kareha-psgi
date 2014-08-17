@@ -10,12 +10,14 @@ BEGIN { require 'wakautils.pl' }
 
 use constant S_NAVIGATION => 'Navigation:';
 use constant S_RETURN => 'Return';
+use constant S_TOP => 'Top';
+use constant S_BOTTOM => 'Bottom';
 use constant S_ENTIRE => 'Entire thread';
 use constant S_LAST50 => 'Last 50 posts';
 use constant S_FIRST100 => 'First 100 posts';
 use constant S_PREV100 => 'Previous 100 posts';
 use constant S_NEXT100 => 'Next 100 posts';
-use constant S_TOP => 'Thread list';
+use constant S_THREADLIST => 'Thread list';
 use constant S_BOARDLOOK => 'Board look:';
 use constant S_MANAGE => 'Manage';
 use constant S_REBUILD => 'Rebuild caches';
@@ -88,6 +90,8 @@ use constant S_NOTASK => 'Script error; no valid task specified.';			# Error mes
 use constant S_NOLOG => 'Couldn\'t write to log.txt.';						# Error message when log.txt is not writeable or similar
 use constant S_TOOBIG => 'The file you tried to upload is too large.';		# Error message when the image file is larger than MAX_KB
 use constant S_EMPTY => 'The file you tried to upload is empty.';			# Error message when the image file is 0 bytes
+use constant S_INVALIDWEBM => 'The webm you uploaded is invalid.'; 		# General webm error
+use constant S_WEBMAUDIO => 'The webm you uploaded contained an audio or another forbidden track.'; 		# Not so general webm error
 use constant S_BADFORMAT => 'File format not allowed.';						# Error message when the file is not in a supported format.
 use constant S_DUPE => 'This file has already been posted <a href="%s">here</a>.';	# Error message when an md5 checksum already exists.
 use constant S_DUPENAME => 'A file with the same name already exists.';		# Error message when an filename already exists.
@@ -131,6 +135,7 @@ var markup_descriptions={
 
 
 use constant GLOBAL_FOOT_INCLUDE => include(INCLUDE_DIR."footer.html").q{
+<div id="bottom"></div>
 </body></html>
 };
 
@@ -236,7 +241,7 @@ use constant MAIN_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 <div id="threadlist">
 <loop $allthreads><if $num<=THREADS_LISTED>
 	<span class="threadlink">
-	<a href="<var $self>/<var $thread>/l50" rel="nofollow"><var $num>: 
+	<a href="<var $self>/<var $thread>/l50" rel="nofollow"><var $num>:
 	<if $num<=THREADS_DISPLAYED></a><a href="#<var $num>"></if>
 	<var $title> (<var $postcount>)</a>
 	</span>
@@ -299,7 +304,7 @@ use constant MAIN_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 		<a href="<var $self>/<var $thread>/"><const S_ENTIRE></a>
 		<a href="<var $self>/<var $thread>/l50" rel="nofollow"><const S_LAST50></a>
 		<a href="<var $self>/<var $thread>/-100" rel="nofollow"><const S_FIRST100></a>
-		<a href="#menu"><const S_TOP></a>
+		<a href="#menu"><const S_THREADLIST></a>
 		</div></td>
 	</tr>
 	</tbody></table>
@@ -348,6 +353,7 @@ use constant THREAD_HEAD_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 	<a href="<var $self>/<var $thread>/<var $start>-<var $start+99<$postcount?$start+99:$postcount>" rel="nofollow"><var $start>-</a>
 </loop>
 <a href="<var $self>/<var $thread>/l50" rel="nofollow"><const S_LAST50></a>
+<a href="#bottom"><const S_BOTTOM></a>
 </div>
 
 <div id="posts">
@@ -385,6 +391,7 @@ use constant THREAD_FOOT_TEMPLATE => compile_template( q{
 	<if $prevpost><a href="<var $self>/<var $thread>/<var $prevpost\>99?$prevpost-99:1>-<var $prevpost>" rel="nofollow"><const S_PREV100></a></if>
 	<if $nextpost><a href="<var $self>/<var $thread>/<var $nextpost>-<var $nextpost<$postcount-99?$nextpost+99:$postcount>" rel="nofollow"><const S_NEXT100></a></if>
 	<a href="<var $self>/<var $thread>/l50" rel="nofollow"><const S_LAST50></a>
+	<a href="#top"><const S_TOP></a>
 	</div></td>
 </tr>
 <if !$closed><var POSTING_FORM_TEMPLATE-\>(thread=\>$thread,captchaclass=\>"postcaptcha",formid=\>"postform$thread",allowimages=\>ALLOW_IMAGE_REPLIES)></if>
@@ -421,8 +428,8 @@ use constant REPLY_TEMPLATE => compile_template( q{
 
 <if $image>
 	<if $thumbnail>
-		<a href="<var expand_filename(clean_path($image))>">
-		<img src="<var expand_filename($thumbnail)>" width="<var $tn_width>" height="<var $tn_height>" 
+		<a href="<var expand_filename(clean_path($image))>" target="_blank">
+		<img src="<var expand_filename($thumbnail)>" width="<var $tn_width>" height="<var $tn_height>"
 		alt="<var clean_string($image)>: <var $width>x<var $height>, <var int($size/1024)> kb"
 		title="<var clean_string($image)>: <var $width>x<var $height>, <var int($size/1024)> kb"
 		class="thumb" /></a>

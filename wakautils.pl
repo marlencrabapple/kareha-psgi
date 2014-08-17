@@ -4,6 +4,7 @@ use strict;
 
 use Time::Local;
 use Socket;
+use JSON;
 
 our $has_md5=0;
 eval 'use Digest::MD5 qw(md5)';
@@ -1092,19 +1093,22 @@ sub spam_screen($)
 # Image utilities
 #
 
-sub analyze_image($$)
-{
-	my ($file,$name)=@_;
+sub analyze_image($$) {
+	my ($file,$name) = @_;
 	my (@res);
 
 	safety_check($file);
 
-	return ("jpg",@res) if(@res=analyze_jpeg($file));
-	return ("png",@res) if(@res=analyze_png($file));
-	return ("gif",@res) if(@res=analyze_gif($file));
+	return ("jpg", @res) if(@res = analyze_jpeg($name));
+	return ("png", @res) if(@res = analyze_png($name));
+	return ("gif", @res) if(@res = analyze_gif($name));
+
+	if(ALLOW_WEBM) {
+		return ("webm", @res) if(@res = analyze_webm($file));
+	}
 
 	# find file extension for unknown files
-	my ($ext)=$name=~/\.([^\.]+)$/;
+	my ($ext) = $name=~/\.([^\.]+)$/;
 	return (lc($ext),0,0);
 }
 
@@ -1123,7 +1127,7 @@ sub analyze_jpeg($)
 	my ($file)=@_;
 	my ($buffer);
 
-	read($file,$buffer,2);
+	read($file,$buffer,2) or die $!;
 
 	if($buffer eq "\xff\xd8")
 	{
@@ -1191,33 +1195,68 @@ sub analyze_gif($)
 	return ($width,$height);
 }
 
-sub make_thumbnail($$$$$;$)
+sub analyze_webm {
+	my ($file) = @_;
+	my ($ffprobe,$stdout,$width,$height);
+
+	$ffprobe = FFPROBE_PATH;
+
+	# get webm info
+	$stdout = `$ffprobe -v quiet -print_format json -show_format -show_streams $file`;
+	$stdout = decode_json($stdout) or return 1;
+
+	# check if file is legitimate
+	return 1 if(!%$stdout); # empty json response from ffprobe
+	return 1 unless($$stdout{format}->{format_name} eq 'matroska,webm'); # invalid format
+	return 2 if(scalar @{$$stdout{streams}} > 1); # too many streams
+	return 1 if(@{$$stdout{streams}}[0]->{codec_name} ne 'vp8'); # stream isn't webm
+	return 1 unless(@{$$stdout{streams}}[0]->{width} and @{$$stdout{streams}}[0]->{height});
+	return 1 if(!$$stdout{format} or $$stdout{format}->{duration} > 120);
+
+	($width,$height) = (@{$$stdout{streams}}[0]->{width},@{$$stdout{streams}}[0]->{height});
+}
+
+sub make_thumbnail($$$$$$;$)
 {
-	my ($filename,$thumbnail,$width,$height,$quality,$convert)=@_;
+	my ($filename,$thumbnail,$ext,$width,$height,$quality,$convert)=@_;
+
+	# webm thumbnails
+	# jpg thumbnails are more practical than animated webm ones so we won't bother
+	# with any fancy transcoding
+	if($ext eq 'webm') {
+		$thumbnail =~ s/webm/jpg/;
+		my $ffmpeg = FFMPEG_PATH;
+		my $stdout = `$ffmpeg -i $filename -v quiet -ss 00:00:00 -an -vframes 1 -f mjpeg -vf scale=$width:$height $thumbnail 2>&1`;
+		return 1 unless $stdout;
+	}
 
 	# first try GraphicsMagick
+	my $transparency = $filename =~ /\.(png|gif)$/ ? '-background transparent' : '-background white';
 	my $method = ($filename =~ /\.gif$/) ? '-coalesce -sample' : '-resize';
-	`gm convert $filename $method ${width}x${height}! -quality $quality $thumbnail`;
+	`gm convert $transparency $filename $method ${width}x${height}! -quality $quality $thumbnail`;
 	return 2 unless($?);
 
 	# then ImageMagick
 	$convert = "convert" unless($convert);
-	`$convert $filename $method ${width}x${height}! -quality $quality $thumbnail`;
-	 return 2 unless($?);
+	`$convert $transparency $filename $method ${width}x${height}! -quality $quality $thumbnail`;
+	return 2 unless($?);
+
+	$thumbnail =~ s/webm/jpg/; # not going to bother with png/gif thumbnails for
+														 # other thumbnailing methods.
 
 	# if that fails, try pnmtools instead
-	if($filename=~/\.jpg$/)
+	if($ext eq 'jpg')
 	{
 		`djpeg $filename | pnmscale -width $width -height $height | cjpeg -quality $quality > $thumbnail`;
 		# could use -scale 1/n
 		return 1 unless($?);
 	}
-	elsif($filename=~/\.png$/)
+	elsif($ext eq 'png')
 	{
 		`pngtopnm $filename | pnmscale -width $width -height $height | cjpeg -quality $quality > $thumbnail`;
 		return 1 unless($?);
 	}
-	elsif($filename=~/\.gif$/)
+	elsif($ext eq 'gif')
 	{
 		`giftopnm $filename | pnmscale -width $width -height $height | cjpeg -quality $quality > $thumbnail`;
 		return 1 unless($?);
@@ -1253,9 +1292,9 @@ sub make_thumbnail($$$$$;$)
     unless($@)
     {
 		my $src;
-		if($filename=~/\.jpg$/i) { $src=GD::Image->newFromJpeg($filename) }
-		elsif($filename=~/\.png$/i) { $src=GD::Image->newFromPng($filename) }
-		elsif($filename=~/\.gif$/i)
+		if($ext eq 'jpg') { $src=GD::Image->newFromJpeg($filename) }
+		elsif($ext eq 'png') { $src=GD::Image->newFromPng($filename) }
+		elsif($ext eq 'gif')
 		{
 			if(defined &GD::Image->newFromGif) { $src=GD::Image->newFromGif($filename) }
 			else

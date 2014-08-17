@@ -1,6 +1,6 @@
 #
 # Example config file.
-# 
+#
 # Uncomment and edit the options you want to specifically change from the
 # default values. You must specify ADMIN_PASS and SECRET.
 #
@@ -41,6 +41,7 @@
 # Image posts
 #use constant ALLOW_IMAGE_THREADS => 1;			# Allow users to create image threads
 #use constant ALLOW_IMAGE_REPLIES => 1;			# Allow users to make image replies
+#use constant ALLOW_WEBM => 0;              # Allow users to upload webms
 #use constant IMAGE_REPLIES_PER_THREAD => 0;	# Number of image replies per thread to show, set to 0 for no limit.
 #use constant MAX_KB => 1000;					# Maximum upload size in KB
 #use constant MAX_W => 200;						# Images exceeding this width will be thumbnailed

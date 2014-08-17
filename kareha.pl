@@ -5,6 +5,7 @@ use CGI::Carp qw(fatalsToBrowser);
 use strict;
 
 use CGI;
+use JSON;
 use Data::Dumper;
 use Fcntl ':flock';
 
@@ -1214,7 +1215,8 @@ sub make_error($)
 	print "Content-Type: ".get_xhtml_content_type(CHARSET,USE_XHTML)."\n";
 	print "\n";
 	print ERROR_TEMPLATE->(error=>$error);
-	exit 0;
+
+	exit;
 }
 
 
@@ -1245,7 +1247,17 @@ sub process_file($$$)
 	binmode $file;
 
 	# analyze file and check that it's in a supported format
-	my ($ext,$width,$height)=analyze_image($file,$uploadname);
+
+	# we use the temp file created by CGI.pm to avoid having to manually try and
+	# escape a potentially malicious filename when analyzing webms.
+	# the actual filename is still passed as $uploadname for determining the file
+	# extension.
+	my ($ext,$width,$height) = analyze_image($query->tmpFileName($file),$uploadname);
+
+	if(($ext eq "webm") && (!$height)) {
+		make_error(S_INVALIDWEBM) if $width == 1;
+		make_error(S_WEBMAUDIO) if $width == 2;
+	}
 
 	my $known=$width || $filetypes{$ext};
 
@@ -1278,6 +1290,9 @@ sub process_file($$$)
 	}
 	close $file;
 	close OUTFILE;
+
+	unlink $query->tmpFileName($file); # Plack::App::WrapCGI isn't deleting these
+	                                   # for whatever reason
 
 	if($md5ctx) # if we have Digest::MD5, get the checksum
 	{
@@ -1322,28 +1337,14 @@ sub process_file($$$)
 	}
 	elsif($width>MAX_W or $height>MAX_H or THUMBNAIL_SMALL)
 	{
-		if($width<=MAX_W and $height<=MAX_H)
-		{
-			$tn_width=$width;
-			$tn_height=$height;
-		}
-		else
-		{
-			$tn_width=MAX_W;
-			$tn_height=int(($height*(MAX_W))/$width);
-
-			if($tn_height>MAX_H)
-			{
-				$tn_width=int(($width*(MAX_H))/$height);
-				$tn_height=MAX_H;
-			}
-		}
+		($tn_width,$tn_height) = get_thumbnail_dimensions($width,$height);
 
 		if(STUPID_THUMBNAILING) { $thumbnail=$filename }
 		else {
-			my $tnmethod = make_thumbnail($filename,$thumbnail,$tn_width,$tn_height,THUMBNAIL_QUALITY,CONVERT_COMMAND);
+			my $tnmethod = make_thumbnail($filename,$thumbnail,$ext,$tn_width,$tn_height,THUMBNAIL_QUALITY,CONVERT_COMMAND);
 			if($tnmethod) {
-				$thumbnail = $tnmethod == 1 ? ($thumbnail=~s/$ext/.jpg/) : $thumbnail;
+				#$thumbnail = $tnmethod == 1 ? ($thumbnail = $thumbnail) =~ s/$ext/.jpg/ : $thumbnail;
+				$thumbnail=~s/$ext/jpg/ if $tnmethod == 1;
 			}
 			else {
 				$thumbnail = undef;
@@ -1376,4 +1377,25 @@ sub process_file($$$)
 	}
 
 	return ($filename,$ext,$size,$md5,$width,$height,$thumbnail,$tn_width,$tn_height);
+}
+
+sub get_thumbnail_dimensions($$) {
+	my ($width,$height) = @_;
+	my ($tn_width,$tn_height);
+
+	if($width <= MAX_W and $height <= MAX_H) {
+		$tn_width = $width;
+		$tn_height = $height;
+	}
+	else {
+		$tn_width = MAX_W;
+		$tn_height = int(($height*(MAX_W))/$width);
+
+		if($tn_height>MAX_H) {
+			$tn_width = int(($width*(MAX_H))/$height);
+			$tn_height = MAX_H;
+		}
+	}
+
+	return ($tn_width,$tn_height);
 }

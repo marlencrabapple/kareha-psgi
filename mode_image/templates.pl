@@ -65,6 +65,8 @@ use constant S_NOLOG => 'Couldn\'t write to log.txt.';						# Error message when
 use constant S_TOOBIG => 'The file you tried to upload is too large.';		# Error message when the image file is larger than MAX_KB
 use constant S_EMPTY => 'The file you tried to upload is empty.';			# Error message when the image file is 0 bytes
 use constant S_BADFORMAT => 'File format not allowed.';						# Error message when the file is not in a supported format.
+use constant S_INVALIDWEBM => 'The webm you uploaded is invalid.'; 		# General webm error
+use constant S_WEBMAUDIO => 'The webm you uploaded contained an audio or another forbidden track.'; 		# Not so general webm error
 use constant S_DUPE => 'This file has already been posted <a href="%s">here</a>.';	# Error message when an md5 checksum already exists.
 use constant S_DUPENAME => 'A file with the same name already exists.';		# Error message when an filename already exists.
 use constant S_THREADCLOSED => 'This thread is closed.';					# Error message when posting in a legen^H^H^H^H^H closed thread

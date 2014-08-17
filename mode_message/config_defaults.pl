@@ -43,6 +43,7 @@ BEGIN {
 	# Image posts
 	eval "use constant ALLOW_IMAGE_THREADS => 0" unless(defined &ALLOW_IMAGE_THREADS);
 	eval "use constant ALLOW_IMAGE_REPLIES => 0" unless(defined &ALLOW_IMAGE_REPLIES);
+	eval "use constant ALLOW_WEBM => 0" unless(defined &ALLOW_WEBM);
 	eval "use constant IMAGE_REPLIES_PER_THREAD => 0" unless(defined &IMAGE_REPLIES_PER_THREAD);
 	eval "use constant MAX_KB => 1000" unless(defined &MAX_KB);
 	eval "use constant MAX_W => 200" unless(defined &MAX_W);
@@ -57,6 +58,8 @@ BEGIN {
 	eval "use constant MAX_IMAGE_HEIGHT => 16384" unless(defined &MAX_IMAGE_HEIGHT);
 	eval "use constant MAX_IMAGE_PIXELS => 50000000" unless(defined &MAX_IMAGE_PIXELS);
 	eval "use constant CONVERT_COMMAND => 'convert'" unless(defined &CONVERT_COMMAND);
+	eval "use constant FFMPEG_PATH => './ffmpeg'" unless(defined &FFMPEG_PATH);
+	eval "use constant FFPROBE_PATH => './ffprobe'" unless(defined &FFPROBE_PATH);
 
 	# Captcha
 	eval "use constant ENABLE_CAPTCHA => 0" unless(defined &ENABLE_CAPTCHA);
