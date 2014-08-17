@@ -351,6 +351,10 @@ sub post_stuff($$$$$$$$$$$$)
 	my $c_password=$password;
 	my $c_markup=$markup;
 
+	# get noko before $link is tampered with
+	my $noko = $link =~ /noko/i;
+	$link =~ s/noko//i;
+
 	# kill the name if anonymous posting is being enforced
 	if(FORCED_ANON)
 	{
@@ -428,6 +432,15 @@ sub post_stuff($$$$$$$$$$$$)
 	make_cookies(name=>$c_name,link=>$c_link,password=>$c_password,
 	$savemarkup?(markup=>$c_markup):(),
 	captchakey=>make_random_string(8),-charset=>CHARSET,-autopath=>COOKIE_PATH); # yum!
+
+	if($noko) {
+		my $script = $ENV{SCRIPT_NAME};
+		release_log($log);
+		CGI::initialize_globals();
+
+		make_http_forward("$script/$thread/l50#reply$num",ALTERNATE_REDIRECT);
+		exit;
+	}
 }
 
 sub preview_post($$$)

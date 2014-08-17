@@ -411,7 +411,7 @@ use constant THREAD_FOOT_TEMPLATE => compile_template( q{
 
 use constant REPLY_TEMPLATE => compile_template( q{
 
-<div class="reply">
+<div class="reply" id="reply<var $num>">
 
 <h3>
 <span class="replynum"><a title="Quote post number in reply" href="javascript:insert('&gt;&gt;<var $num>',<var $thread>)"><var $num></a></span>
