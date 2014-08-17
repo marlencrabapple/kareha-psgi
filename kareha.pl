@@ -1223,6 +1223,7 @@ sub make_error($)
 {
 	my ($error)=@_;
 
+	release_log($log);
 	CGI::initialize_globals();
 
 	print "Content-Type: ".get_xhtml_content_type(CHARSET,USE_XHTML)."\n";
