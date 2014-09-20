@@ -5,6 +5,7 @@ BEGIN {
 	use constant S_NOSECRET => 'No SECRET defined in the configuration';	# Returns error when the config is incomplete
 
 	# System config
+	die S_NOADMIN unless(defined &ADMIN_PASS);
 	die S_NOSECRET unless(defined &SECRET);
 	unless(defined &CAPPED_TRIPS)
 	{
