@@ -45,6 +45,8 @@ if(!$task)
 {
 	if($ENV{PATH_INFO}) { show_thread($ENV{PATH_INFO}) }
 	else { make_http_forward(HTML_SELF,ALTERNATE_REDIRECT) }
+
+	prepare_for_exit(1);
 	exit 0;
 }
 
@@ -73,6 +75,8 @@ elsif($task eq "preview")
 	my $thread=$query->param("thread");
 
 	preview_post($comment,$markup,$thread);
+	prepare_for_exit();
+
 	exit;
 }
 elsif($task eq "delete")
@@ -118,8 +122,7 @@ else
 	make_error(S_NOTASK);
 }
 
-release_log($log);
-CGI::initialize_globals();
+prepare_for_exit();
 
 if($query->param("r")) { make_http_forward($ENV{HTTP_REFERER},ALTERNATE_REDIRECT) }
 else { make_http_forward(HTML_SELF,ALTERNATE_REDIRECT) }
@@ -430,8 +433,7 @@ sub post_stuff($$$$$$$$$$$$)
 
 	if($noko) {
 		my $script = $ENV{SCRIPT_NAME};
-		release_log($log);
-		CGI::initialize_globals();
+		prepare_for_exit();
 
 		make_http_forward("$script/$thread/l50#reply$num",ALTERNATE_REDIRECT);
 		exit;
@@ -1155,6 +1157,11 @@ sub decrypt_string($$)
 # Utility funtions
 #
 
+sub prepare_for_exit {
+	release_log($log) unless shift;
+	CGI::initialize_globals();
+}
+
 sub get_stylesheets() {
 	my $found = 0;
 
@@ -1204,8 +1211,7 @@ sub make_error($)
 {
 	my ($error)=@_;
 
-	release_log($log);
-	CGI::initialize_globals();
+	prepare_for_exit();
 
 	print "Content-Type: ".get_xhtml_content_type(CHARSET,USE_XHTML)."\n";
 	print "\n";
