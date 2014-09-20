@@ -1,0 +1,283 @@
+/*
+* From hivebbs by desuwa
+* http://bbs.neet.tv/
+*/
+
+/*! YUI Reset */
+html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,dfn,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit}input,textarea,legend{color:#000}
+
+body, html {
+  background: #FFFAFA;
+}
+
+body {
+  font: 16px
+    Sylfaen,
+    'Palatino Linotype',
+    Palatino,
+    'Century Schoolbook L',
+    'Times New Roman',
+    serif;
+  color: #232c33;
+  margin: 10px 40px 20px;
+}
+
+pre, code {
+  font: 12px
+    'DejaVu Sans Mono',
+    'Consolas',
+    'Andale Mono',
+    'Lucida Console',
+    monospace;
+}
+
+a {
+  cursor: pointer;
+  color: #007FFF;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #C41E3A;
+  text-decoration: underline;
+}
+
+a:focus {
+  color: #C41E3A;
+  outline: none;
+}
+
+q:before { content: '' }
+q:after { content: '' }
+q { color: #708090 }
+
+h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  margin: 0.6em 0 0.6em;
+}
+
+h1, h2 {
+  font-size: 32px;
+  font-weight: bold;
+  word-wrap: break-word;
+}
+
+.mainpage h2 {
+  font-size: 25px;
+}
+
+h3 { font-size: 18px; }
+
+form, p, ul, ol, pre, table { margin-bottom: 1em; }
+
+thead { font-weight: bold; }
+
+#navigation a, .threadlinks a, #threadlistnav a, #newthreadnav a {
+  margin: 0 6px 0 0;
+}
+
+#navigation a:last-child, .threadlinks a:last-child, #threadlistnav a:last-child {
+  margin-right: 0;
+}
+
+#navigation strong {
+  display: none;
+}
+
+.threadnavigation, #threadlistnav, #newthreadnav {
+  float: right;
+}
+
+#newthreadnav {
+  font-weight: bold;
+}
+
+#threadlistnav a {
+  font-weight: bold;
+}
+
+#threadlist {
+  border: 2px solid #ddd;
+  margin: 5px 0;
+  padding: 5px 3px
+}
+
+#rules {
+  margin: 5px 0 10px;
+}
+
+.reply {
+  margin-bottom: 30px;
+}
+
+.reply h3 {
+  white-space: nowrap;
+  color: #708090;
+  font-weight: normal;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+.reply h3 span.replynum a {
+  font-weight: bold;
+  color: #232c33;
+  margin-right: 0.5em;
+}
+
+.reply h3 span.postername {
+  color: #00A550;
+  font-weight: bold;
+  word-wrap: break-word;
+}
+
+.reply h3 span.postertrip {
+
+}
+
+.reply h3 span.deletebutton {
+
+}
+
+.reply div.replytext {
+  display: inline-block;
+  margin-left: 20px;
+  margin-top: 10px;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+.reply div.replytext p:last-child, div.replytext p:last-child {
+  margin-bottom: 0;
+}
+
+.reply div.replytext blockquote {
+  color: #708090;
+  display: inline;
+}
+
+#newthreadhead {
+  border-top: 2px solid #ddd;
+  margin-top: 30px
+}
+
+#newthreadhead h2 {
+  font-size: 18px;
+}
+
+body.threadpage .postform {
+  border-bottom: 2px solid #ddd;
+}
+
+form.postform table {
+  width: 400px;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 1em;
+}
+
+form.postform table td, form.postform table th {
+  padding: 2px 5px 2px 0;
+}
+
+form.postform table tr td:last-child {
+  padding-right: 0;
+}
+
+form.postform table input[type=text], form.postform table input[type=email], textarea {
+  margin: 0;
+  padding: 1px 2px;
+  box-sizing: border-box;
+}
+
+form.postform table input[type=text], form.postform table input[type=email] {
+  width: 185px;
+}
+
+form.postform table input[type=submit] {
+  width:62px
+}
+
+form.postform .options input[type=button] {
+  width: 115px;
+}
+
+form.postform input[type=button], form.postform input[type=submit] {
+  float: right;
+  padding: 1px 2px;
+  box-sizing: border-box;
+}
+
+td.namelink {
+  white-space: nowrap;
+}
+
+textarea {
+  width: 505px
+}
+
+#threadform {
+  border-bottom: 2px solid #ddd;
+}
+
+#threadform .namelink input[type=text], #threadform .namelink input[type=email] {
+  width: 229px
+}
+
+#threadform input[type=submit] {
+  width: 110px;
+}
+
+#threadform .newthreadtitle input[type=text] {
+  width: 385px;
+}
+
+.options .replytext {
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  padding: 3px 5px;
+}
+
+.backlogpage #navigation {
+  margin-bottom: 10px
+}
+
+#oldthreadlist {
+  margin-top: 20px;
+}
+
+#oldthreadlist tr.head {
+  display:none
+}
+
+#oldthreadlist tr::before {
+  content: "»";
+}
+
+#oldthreadlist td {
+  display: none;
+}
+
+#oldthreadlist td.sb-title, #oldthreadlist td.sb-postcount {
+  display: inline;
+}
+
+#oldthreadlist td.sb-postcount, #oldthreadlist td.sb-postcount a {
+  color: #708090;
+}
+
+#oldthreadlist td.sb-postcount::before {
+  content: "("
+}
+
+#oldthreadlist td.sb-postcount::after {
+  content: ")"
+}
+
+#oldthreadlist tr td {
+  padding-left: 5px;
+}
+
+#footer {
+  text-align: center
+}

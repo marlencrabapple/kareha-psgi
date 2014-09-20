@@ -28,7 +28,7 @@ use constant S_LINK => 'Link:';
 use constant S_FORCEDANON => '(Anonymous posting is being enforced)';
 use constant S_CAPTCHA => 'Verification:';
 use constant S_TITLE => 'Title:';
-use constant S_NEWTHREAD => 'Create new thread';
+use constant S_NEWTHREAD => 'New Thread';
 use constant S_IMAGE => 'Image:';
 use constant S_IMAGEDIM => 'Image: ';
 use constant S_NOTHUMBNAIL => 'No<br />thumbnail';
@@ -149,7 +149,7 @@ use constant INSTALL_TEMPLATE => compile_template(GLOBAL_HEAD_INCLUDE . q{
 use constant POSTING_FORM_TEMPLATE => compile_template(q{
 <if !$thread><tr>
 	<td><const S_TITLE></td>
-	<td>
+	<td class="newthreadtitle">
 		<input type="text" name="title" size="46" maxlength="<const MAX_FIELD_LENGTH>" />
 		<input type="submit" value="<const S_NEWTHREAD>" />
 	</td>
@@ -159,13 +159,16 @@ use constant POSTING_FORM_TEMPLATE => compile_template(q{
 	<td>
 		<if !FORCED_ANON><const S_NAME></if>
 		<if FORCED_ANON><const S_LINK></if>
-	</td><td>
-		<if !FORCED_ANON><input type="text" name="field_a" size="19" maxlength="<const MAX_FIELD_LENGTH>" /> <const S_LINK> </if>
+	</td>
+	<td class="namelink">
+		<if !FORCED_ANON>
+		  <input type="text" name="field_a" size="19" maxlength="<const MAX_FIELD_LENGTH>" /> <const S_LINK>
+		</if>
 		<if FORCED_ANON><input type="hidden" name="field_a" /></if>
  		<input type="text" name="field_b" size="19" maxlength="<const MAX_FIELD_LENGTH>" />
 		<if $thread><input type="submit" value="<const S_REPLY>" /></if>
 		<if SPAM_TRAP><div style="display:none"><const S_SPAMTRAP><input type="text" name="name" size="19" autocomplete="off" /><input type="text" name="link" size="19" autocomplete="off" /></div></if>
-		<small><a href="javascript:show('options<var $thread>')"><const S_MOREOPTS></a></small>
+
 	</td>
 </tr>
 
@@ -177,7 +180,12 @@ use constant POSTING_FORM_TEMPLATE => compile_template(q{
 	</td>
 </tr></if>
 
-<tr style="display:none;vertical-align:top" id="options<var $thread>">
+<tr class="optionstoggle">
+<td></td>
+<td><small><a href="javascript:show('options<var $thread>')"><const S_MOREOPTS></a></small></td>
+</tr>
+
+<tr style="display:none;vertical-align:top" id="options<var $thread>" class="options">
 	<td><const S_FORMATTING></td>
 	<td>
 		<select name="markup" onchange="select_markup(this)"><loop $markup_formats>
@@ -192,7 +200,7 @@ use constant POSTING_FORM_TEMPLATE => compile_template(q{
 
 <tr>
 	<td></td>
-	<td><textarea name="comment" cols="64" rows="5" onfocus="size_field('<var $formid>',15)" onblur="size_field('<var $formid>',5)"></textarea></td>
+	<td><textarea name="comment" cols="64" rows="5"></textarea></td>
 </tr>
 
 <if $allowimages><tr>
@@ -296,7 +304,7 @@ use constant MAIN_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 	</div>
 	</div>
 
-	<form id="postform<var $thread>" action="<var $self>" method="post" enctype="multipart/form-data">
+	<form id="postform<var $thread>" action="<var $self>" method="post" class="postform" enctype="multipart/form-data">
 	<input type="hidden" name="task" value="post" />
 	<input type="hidden" name="thread" value="<var $thread>" />
 	<input type="hidden" name="password" value="" />
@@ -333,7 +341,7 @@ use constant MAIN_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 	</div>
 </div>
 
-<form id="threadform" action="<var $self>" method="post" enctype="multipart/form-data">
+<form id="threadform" action="<var $self>" method="post" class="postform" enctype="multipart/form-data">
 
 <input type="hidden" name="task" value="post" />
 <input type="hidden" name="password" value="" />
@@ -389,7 +397,7 @@ use constant THREAD_FOOT_TEMPLATE => compile_template( q{
 <h4><var int($size/1024)> kb</h4>
 </if>
 
-<form id="postform<var $thread>" action="<var $self>" method="post"  enctype="multipart/form-data">
+<form id="postform<var $thread>" action="<var $self>" method="post" class="postform" enctype="multipart/form-data">
 
 <input type="hidden" name="task" value="post" />
 <input type="hidden" name="thread" value="<var $thread>" />
@@ -501,11 +509,11 @@ use constant BACKLOG_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 <loop $threads>
 <tr class="line<var $num&1>">
 
-<td align="right"><var $num>:</td>
-<td><a href="<var $self>/<var $thread>/l50" rel="nofollow"><var $title><if $closed or $permasage> <small>(<if $closed><const S_LIST_CLOSED></if><if !$closed and $permasage><const S_LIST_PERMASAGED></if>)</small></if></a></td>
-<td align="right"><a href="<var $self>/<var $thread>/"><var $postcount></a></td>
-<td><var make_date($lastmod,DATE_STYLE)></td>
-<td align="right"><var int($size/1024)> kb</td>
+<td class="sb-num" align="right"><var $num>:</td>
+<td class="sb-title"><a href="<var $self>/<var $thread>/l50" rel="nofollow"><var $title><if $closed or $permasage> <small>(<if $closed><const S_LIST_CLOSED></if><if !$closed and $permasage><const S_LIST_PERMASAGED></if>)</small></if></a></td>
+<td class="sb-postcount" align="right"><a href="<var $self>/<var $thread>/"><var $postcount></a></td>
+<td class="sb-date"><var make_date($lastmod,DATE_STYLE)></td>
+<td class="sb-size" align="right"><var int($size/1024)> kb</td>
 
 </tr>
 </loop>
