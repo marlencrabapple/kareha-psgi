@@ -1166,25 +1166,24 @@ sub get_stylesheets() {
 	my $found = 0;
 
 	my @stylesheets = map {
-		if($_ ne CSS_DIR . GLOBAL_STYLE) {
-			my %sheet;
+		my %sheet;
 
-			$sheet{filename} = $_;
+		$sheet{filename} = $_;
 
-			($sheet{title}) = m!([^/]+)\.css$!i;
-			$sheet{title} = ucfirst $sheet{title};
-			$sheet{title} =~ s/_/ /g;
-			$sheet{title} =~ s/ ([a-z])/ \u$1/g;
-			$sheet{title} =~ s/([a-z])([A-Z])/$1 $2/g;
+		($sheet{title}) = m!([^/]+)\.css$!i;
+		$sheet{title} = ucfirst $sheet{title};
+		$sheet{title} =~ s/_/ /g;
+		$sheet{title} =~ s/ ([a-z])/ \u$1/g;
+		$sheet{title} =~ s/([a-z])([A-Z])/$1 $2/g;
 
-			if($sheet{title} eq DEFAULT_STYLE) { $sheet{default} = 1; $found = 1; }
-			else { $sheet{default} = 0; }
+		if($sheet{title} eq DEFAULT_STYLE) { $sheet{default} = 1; $found = 1; }
+		else { $sheet{default} = 0; }
 
-			\%sheet;
-		}
-	} glob(CSS_DIR . "*.css");
+		\%sheet;
+	} grep { $_ ne CSS_DIR . GLOBAL_STYLE } glob(CSS_DIR . "*.css");
 
 	$stylesheets[0]{default} = 1 if(@stylesheets and !$found);
+
 	return \@stylesheets;
 }
 

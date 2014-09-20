@@ -119,9 +119,7 @@ use constant GLOBAL_HEAD_INCLUDE => q{
 <link rel="stylesheet" type="text/css" href="<var expand_filename(CSS_DIR . GLOBAL_STYLE)>" />
 
 <loop $stylesheets>
-<if $filename ne 'message'>
 <link rel="<if !$default>alternate </if>stylesheet" type="text/css" href="<var expand_filename($filename)>" title="<var $title>" />
-</if>
 </loop>
 
 <script type="text/javascript">
