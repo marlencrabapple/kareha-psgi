@@ -107,6 +107,7 @@ thead { font-weight: bold; }
 }
 
 .reply {
+  clear: both;
   margin-bottom: 30px;
 }
 
@@ -140,7 +141,7 @@ thead { font-weight: bold; }
 }
 
 .reply div.replytext {
-  display: inline-block;
+  display: block;
   margin-left: 20px;
   margin-top: 10px;
   max-width: 100%;
@@ -154,6 +155,21 @@ thead { font-weight: bold; }
 .reply div.replytext blockquote {
   color: #708090;
   display: inline;
+}
+
+#posts img.thumb, #posts a img {
+  float: left;
+  border: 1px solid #ddd;
+  margin: 0.5em 2em 0.5em 2em;
+}
+#posts .nothumbnail {
+  float: left;
+  display: inline; /* stupid IE bug */
+  background: #eeeeee;
+  border: 2px dashed #cccccc;
+  text-align: center;
+  padding: 1em 0.5em 1em 0.5em;
+  margin: 0.5em 2em 0.5em 2em;
 }
 
 #newthreadhead {
