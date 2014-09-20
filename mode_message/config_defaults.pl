@@ -5,7 +5,6 @@ BEGIN {
 	use constant S_NOSECRET => 'No SECRET defined in the configuration';	# Returns error when the config is incomplete
 
 	# System config
-	die S_NOADMIN unless(defined &ADMIN_PASS);
 	die S_NOSECRET unless(defined &SECRET);
 	unless(defined &CAPPED_TRIPS)
 	{
@@ -24,6 +23,8 @@ BEGIN {
 	eval "use constant S_ANONAME => 'Anonymous'" unless(defined &S_ANONAME);
 	eval "use constant DEFAULT_STYLE => 'Headline'" unless(defined &DEFAULT_STYLE);
 	eval "use constant FAVICON => 'kareha.ico'" unless(defined &FAVICON);
+	eval "use constant SUBBACK_INDEX => 0" unless(defined &SUBBACK_INDEX);
+	eval "use constant SUBBACK_POSTFORM => 0" unless(defined &SUBBACK_POSTFORM);
 
 	# Limitations
 	eval "use constant ALLOW_TEXT_THREADS => 1" unless(defined &ALLOW_TEXT_THREADS);

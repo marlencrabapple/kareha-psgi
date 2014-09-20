@@ -21,6 +21,8 @@
 #use constant S_ANONAME => 'Anonymous';			# Defines what to print if there is no text entered in the name field
 #use constant DEFAULT_STYLE => 'Headline';		# Default CSS style title
 #use constant FAVICON => 'kareha.ico';			# Path to the favicon for the board
+#use constant SUBBACK_INDEX => 0;           # Display the thread backlog instead of a traditional 2ch index
+#use constant SUBBACK_POSTFORM => 0;        # Display a post form on the thread backlog. Enabling SUBBACK_INDEX enables this by default
 
 # Limitations
 #use constant ALLOW_TEXT_THREADS => 1;			# Allow users to create text threads

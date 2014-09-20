@@ -486,6 +486,10 @@ use constant BACKLOG_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 
 <div id="navigation">
 <strong><const S_NAVIGATION></strong>
+<if $postform>
+<a href="#newthread"><const S_NEWTHREAD_TITLE></a>
+<span class="longdash">—</span>
+</if>
 <a href="<var expand_filename(HTML_SELF)>"><const S_RETURN></a>
 </div>
 
@@ -520,6 +524,29 @@ use constant BACKLOG_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 </tbody></table>
 
 </div>
+
+<if $postform>
+<a name="newthread"></a>
+
+<div id="createbox" class="outerbox"><div class="innerbox">
+
+<div id="newthreadhead">
+	<h2><const S_NEWTHREAD_TITLE></h2>
+</div>
+
+<form id="threadform" action="<var $self>" method="post" class="postform" enctype="multipart/form-data">
+
+<input type="hidden" name="task" value="post" />
+<input type="hidden" name="password" value="" />
+<table><tbody>
+<var POSTING_FORM_TEMPLATE-\>(captchaclass=\>"threadcaptcha",formid=\>"threadform",allowimages=\>ALLOW_IMAGE_THREADS)>
+</tbody></table>
+</form>
+
+</div></div>
+
+<script type="text/javascript">set_new_inputs("threadform");</script>
+</if>
 
 }.GLOBAL_FOOT_INCLUDE);
 
