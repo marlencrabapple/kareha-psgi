@@ -116,7 +116,7 @@ use constant GLOBAL_HEAD_INCLUDE => q{
 <link rel="alternate" title="RSS feed" href="<var expand_filename(RSS_FILE)>" type="application/rss+xml" />
 </if>
 
-<link rel="stylesheet" type="text/css" href="<var expand_filename(GLOBAL_STYLE)>" />
+<link rel="stylesheet" type="text/css" href="<var expand_filename(CSS_DIR . GLOBAL_STYLE)>" />
 
 <loop $stylesheets>
 <if $filename ne 'message'>
@@ -130,6 +130,7 @@ var style_cookie="<const STYLE_COOKIE>";
 var markup_descriptions={
 <loop $markup_formats><var $id>:<var js_string(S_DESCRIBE_FORMATS-\>{$id})>,</loop>dummy:''
 };
+var default_markup="<const DEFAULT_MARKUP>";
 </script>
 <script type="text/javascript" src="<var expand_filename(JS_FILE)>"></script>
 <script type="text/javascript">require_script_version("3.a");</script>
@@ -143,7 +144,9 @@ use constant GLOBAL_FOOT_INCLUDE => include(INCLUDE_DIR."footer.html").q{
 </body></html>
 };
 
-
+use constant INSTALL_TEMPLATE => compile_template(GLOBAL_HEAD_INCLUDE . q{
+	Just a test.
+} . GLOBAL_FOOT_INCLUDE);
 
 use constant POSTING_FORM_TEMPLATE => compile_template(q{
 <if !$thread><tr>
