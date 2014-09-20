@@ -39,10 +39,10 @@ input[type=submit], input[type=button] {
 	color: #400000;
 }
 textarea {
-	-moz-border-radius: 4px;
+	border-radius: 4px;
 }
 .aa {
-	font-family: Mona,'MS PGothic' !important; 
+	font-family: Mona,'MS PGothic' !important;
 }
 
 
@@ -56,14 +56,14 @@ textarea {
 	padding: 3px 0px 3px 0px;
 	margin: 0 0 1em 1em;
 	border: 1px solid #800000;
-	-moz-border-radius: 4px;
+	border-radius: 4px;
 }
 #navigation strong {
 	background: #EEAA88;
 	color: #800000;
 	font-weight: normal;
 	padding: 3px;
-	-moz-border-radius: 3px 0px 0px 3px;
+	border-radius: 3px 0px 0px 3px;
 }
 #navigation a {
 	padding: 3px;
@@ -78,7 +78,7 @@ textarea {
 	clear: both;
 }
 #titlebox {
-	-moz-border-radius: 6px 6px 0 0;
+	border-radius: 6px 6px 0 0;
 }
 h1 {
 	background: #EEAA88;
@@ -96,14 +96,14 @@ h1 {
 	right: 0.8em;
 	top: 0.9em;
 }
-#titlebox div>.threadnavigation {     
+#titlebox div>.threadnavigation {
         right: 0.3em;
 }
 #rules, #threadbox .innerbox {
 	background: #F0E0D6;
 	margin: 3px;
 	padding: 6px;
-	-moz-border-radius: 4px;
+	border-radius: 4px;
 }
 #stylebox {
 	padding: 1px 9px;
@@ -111,17 +111,17 @@ h1 {
 }
 #threadbox {
 	margin-bottom: 2em;
-	-moz-border-radius: 0 0 6px 6px;
+	border-radius: 0 0 6px 6px;
 }
 #threadbox .threadlink {
 	padding-right: 0.5em;
 }
-#threadlinks {
+#threadlinks, #newthreadnav, #threadlistnav {
 	text-align: right;
 	font-weight: bold;
 }
 #createbox {
-	-moz-border-radius: 4px;
+	border-radius: 4px;
 }
 #createbox form {
 	background: #F0E0D6;
@@ -129,9 +129,24 @@ h1 {
 	font-weight: bold;
 	margin: 3px;
 	padding: 3px;
-	-moz-border-radius: 4px;
+	border-radius: 4px;
 }
+
+#newthreadhead {
+	clear:both;
+	margin-bottom:5px;
+}
+
+#newthreadnav {
+	float:right;
+	display:inline;
+	margin-right:2em;
+	line-height:1.4em;
+}
+
 #createbox h2 {
+	display:inline;
+	line-height:1.2em;
 	font-size: 1.2em;
 	font-weight: bold;
 	margin: 0 0 0 2em;
@@ -149,7 +164,7 @@ h1 {
 	background: #F0E0D6;
 	padding: 4px;
 	margin-bottom: 2em;
-	-moz-border-radius: 6px;
+	border-radius: 6px;
 	clear: both;
 }
 #posts .sagethread {
@@ -157,7 +172,7 @@ h1 {
 	border: 3px solid #EEAA88;
 	padding: 4px;
 	margin-bottom: 2em;
-	-moz-border-radius: 6px;
+	border-radius: 6px;
 	clear: both;
 }
 #posts h2 {
@@ -194,7 +209,7 @@ h1 {
 	background: #FFFFEE;
 	height: 4px;
 	margin: -0.3em 1em 0.5em 1em;
-	-moz-border-radius: 4px;
+	border-radius: 4px;
 }
 
 
@@ -280,7 +295,7 @@ h1 {
 	font-family: serif;
 	margin: 3px;
 	padding: 3px;
-	-moz-border-radius: 4px;
+	border-radius: 4px;
 	font-weight: bold;
 }
 #posts form a, #posts form small, #posts form label,
@@ -312,7 +327,7 @@ h1 {
 	width: 100%;
 	background: #F0E0D6;
 	padding: 6px;
-	-moz-border-radius: 4px;
+	border-radius: 4px;
 	margin: 0 auto;
 }
 #oldthreadlist th {

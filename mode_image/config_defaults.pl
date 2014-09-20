@@ -107,6 +107,7 @@ BEGIN {
 	eval "use constant HTML_BACKLOG => ''" unless(defined &HTML_BACKLOG);
 	eval "use constant RSS_FILE => ''" unless(defined &RSS_FILE);
 	eval "use constant JS_FILE => 'kareha.js'" unless(defined &JS_FILE);
+	eval "use constant GLOBAL_STYLE => 'message.css'" unless(defined &GLOBAL_STYLE);
 
 	unless(defined &SPAM_FILES)
 	{

@@ -116,8 +116,12 @@ use constant GLOBAL_HEAD_INCLUDE => q{
 <link rel="alternate" title="RSS feed" href="<var expand_filename(RSS_FILE)>" type="application/rss+xml" />
 </if>
 
+<link rel="stylesheet" type="text/css" href="<var expand_filename(GLOBAL_STYLE)>" />
+
 <loop $stylesheets>
+<if $filename ne 'message'>
 <link rel="<if !$default>alternate </if>stylesheet" type="text/css" href="<var expand_filename($filename)>" title="<var $title>" />
+</if>
 </loop>
 
 <script type="text/javascript">
@@ -248,7 +252,7 @@ use constant MAIN_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 </if></loop>
 </div>
 
-<div id="threadlinks">
+<div id="threadlistnav">
 <a href="#newthread"><const S_NEWTHREAD_TITLE></a>
 <a href="<var expand_filename(HTML_BACKLOG)>"><const S_ALLTHREADS></a>
 </div>
@@ -319,7 +323,14 @@ use constant MAIN_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 <a name="newthread"></a>
 
 <div id="createbox" class="outerbox"><div class="innerbox">
-<h2><const S_NEWTHREAD_TITLE></h2>
+
+<div id="newthreadhead">
+	<h2><const S_NEWTHREAD_TITLE></h2>
+	<div id="newthreadnav">
+		<a href="#threadlist"><const S_THREADLIST></a>
+		<a href="<var expand_filename(HTML_BACKLOG)>"><const S_ALLTHREADS></a>
+	</div>
+</div>
 
 <form id="threadform" action="<var $self>" method="post" enctype="multipart/form-data">
 

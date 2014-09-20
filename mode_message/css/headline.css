@@ -33,7 +33,7 @@ ol p:last-child, ul p:last-child {
 	margin-bottom: 0;
 }
 .aa {
-	font-family: Mona,'MS PGothic' !important; 
+	font-family: Mona,'MS PGothic' !important;
 }
 
 
@@ -84,27 +84,40 @@ h1 {
 #threadbox {
 	margin-bottom: 2em;
 }
-#threadbox .innerbox {
+#threadbox .innerbox, #newthreadhead {
 	padding: 1em 0.5em 0.2em 0.5em;
 }
-#threadbox .threadlink, #threadlinks a {
+#threadbox .threadlink, #threadlistnav a, #newthreadnav a {
 	padding-right: 0.5em;
 }
-#threadlinks {
+#threadlistnav, #newthreadnav {
 	text-align: right;
 	font-weight: bold;
 }
 
 
+#newthreadnav {
+	display:inline;
+	float:right;
+}
 
+#newthreadnav a {
+	line-height: 1.5em;
+}
+
+#newthreadhead {
+	border-bottom: 2px solid #FF7700;
+	margin: 0 0 0.8em 0;
+	padding: 0 0.5em 0 0.5em;
+}
 
 #createbox h2 {
-	border-bottom: 2px solid #FF7700;
+	display:inline;
 	font-size: 1.2em;
 	font-family: sans-serif;
 	font-weight: bold;
-	margin: 0 0 0.7em 0;
-	padding: 0 0 0 3em;
+	line-height: 1.2em;
+	padding: 0 0 0 2.5em;
 }
 
 .threadcaptcha {

@@ -33,7 +33,7 @@ ol p:last-child, ul p:last-child {
 	margin-bottom: 0;
 }
 .aa {
-	font-family: Mona,'MS PGothic' !important; 
+	font-family: Mona,'MS PGothic' !important;
 }
 
 
@@ -43,9 +43,6 @@ ol p:last-child, ul p:last-child {
 	color: #EEEEEE;
 	padding: 4px;
 	clear: both;
-}
-#titlebox {
-	-moz-border-radius: 6px 6px 0 0;
 }
 h1 {
 	color: #EEEEEE;
@@ -64,7 +61,7 @@ h1 {
 	top: 4px;
 	float: right;
 }
-#titlebox div>.threadnavigation {     
+#titlebox div>.threadnavigation {
         right: 4px;
 }
 #rules, #threadbox .innerbox {
@@ -80,26 +77,42 @@ h1 {
 }
 #threadbox {
 	margin-bottom: 2em;
-	-moz-border-radius: 0 0 6px 6px;
 }
-#threadbox .threadlink {
+#threadbox .threadlink, #threadlistnav a, #newthreadnav a {
 	padding-right: 0.5em;
 }
-#threadlinks {
+#threadlistnav, #newthreadnav {
 	text-align: right;
 	font-weight: bold;
 }
-#createbox {
-	-moz-border-radius: 4px;
+
+#newthreadhead {
+  clear:both;
+	margin-bottom:6px
 }
+
+#newthreadnav {
+	display:inline;
+	float:right;
+}
+
+#newthreadnav a {
+	line-height: 1.5em;
+}
+
+#newthreadnav a:last-child {
+	margin-right: 1em;
+}
+
 #createbox h2 {
-	background-color: #49525D;
+	display:inline;
 	font-size: 1.2em;
 	color: #EEEEEE;
 	font-weight: bold;
 	margin: 0px 0px .3em 1em;
 	padding: 0px;
 }
+
 #createbox form {
 	background-color: #8C9FB4;
 	color: #49525D;
@@ -107,7 +120,6 @@ h1 {
 	font-size: .8em;
 	margin: 3px;
 	padding: 3px;
-	-moz-border-radius: 4px;
 	font-weight: bold;
 }
 #createbox input, #createbox textarea {
@@ -122,9 +134,6 @@ h1 {
 	color: #FFFFFF;
 	font-weight: bold;
 }
-#createbox textarea {
-	-moz-border-radius: 4px;
-}
 .threadcaptcha {
 	color: #000000;
 }
@@ -138,7 +147,6 @@ h1 {
 	padding: 4px;
 	margin-bottom: 2em;
 	clear: both;
-	-moz-border-radius: 6px;
 }
 #posts .sagethread
 {
@@ -146,7 +154,6 @@ h1 {
 	padding: 4px;
 	margin-bottom: 2em;
 	clear: both;
-	-moz-border-radius: 6px;
 }
 #posts h2 {
 	float: left;
@@ -185,7 +192,6 @@ h1 {
 	font-size: .8em;
 	margin: 3px;
 	padding: 3px;
-	-moz-border-radius: 4px;
 }
 #posts .allreplies a:link, #posts .firstreply a:link, #posts .finalreplies a:link {
 	color: #49525D;
@@ -282,7 +288,6 @@ h1 {
 	padding: 3px;
 	background-color: #FFFFFF;
 	border: 1px solid #FFFFFF;
-	-moz-border-radius: 4px;
 }
 .replytext blockquote {
 	margin-left: 0em;
@@ -304,7 +309,6 @@ h1 {
 	font-size: .8em;
 	margin: 3px;
 	padding: 3px;
-	-moz-border-radius: 4px;
 }
 #posts form a:link, #createbox form a:link {
 	color: #49525D;
@@ -324,9 +328,6 @@ h1 {
 	border-bottom: 1px solid #B6C2CF;
 	border-left: 1px solid #49525D;
 	border-right: 1px solid #B6C2CF;
-}
-#posts textarea {
-	-moz-border-radius: 4px;
 }
 #posts input[type=submit], #posts input[type=button] {
 	background-color: #000000;
@@ -353,7 +354,6 @@ h1 {
 	background-color: #49525D;
 	padding: 3px 0px 3px 0px;
 	border: 1px solid #49525D;
-	-moz-border-radius: 4px;
 }
 #navigation strong {
 	background-color: #49525D;
@@ -374,7 +374,6 @@ h1 {
 	color: #49525D;
 	font-family: serif;
 	padding: 6px;
-	-moz-border-radius: 4px;
 	margin: 0 auto;
 }
 #oldthreadlist a {

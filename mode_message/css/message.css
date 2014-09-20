@@ -1,0 +1,12 @@
+.inline {
+  display:inline;
+}
+.floatleft {
+  float:left;
+}
+.floatright {
+  float:right;
+}
+.clearfix {
+  clear:both;
+}

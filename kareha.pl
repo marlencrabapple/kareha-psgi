@@ -16,9 +16,7 @@ BEGIN { require 'templates.pl'; }
 BEGIN { require 'captcha.pl'; }
 BEGIN { require 'wakautils.pl'; }
 
-#return 1 if(caller);
 return 1 if((caller)[1]=~/admin\.pl$/);
-
 
 #
 # Global init
@@ -129,7 +127,6 @@ else { make_http_forward(HTML_SELF,ALTERNATE_REDIRECT) }
 #
 # End of main code
 #
-
 
 sub show_thread($)
 {
@@ -289,8 +286,6 @@ sub update_threads()
 		write_thread($thread);
 	}
 }
-
-
 
 #
 # Posting
@@ -559,7 +554,6 @@ sub raw_html_format($4)
 	return $text;
 }
 
-
 sub make_anonymous($$$)
 {
 	my ($ip,$time,$thread)=@_;
@@ -625,8 +619,6 @@ sub make_reply(%)
 
 	return $num;
 }
-
-
 
 #
 # Deleting
@@ -754,10 +746,6 @@ sub close_thread($$)
 
 	build_pages();
 }
-
-
-
-
 
 #
 # Thread access utils
@@ -1062,9 +1050,6 @@ sub make_thread($$$)
 	return $time;
 }
 
-
-
-
 #
 # Log fuctions
 #
@@ -1166,35 +1151,33 @@ sub decrypt_string($$)
 	return rc4(decode_base64($crypt),make_key($key,SECRET,32).$iv);
 }
 
-
-
 #
 # Utility funtions
 #
 
-sub get_stylesheets()
-{
-	my $found=0;
-	my @stylesheets=map
-	{
-		my %sheet;
+sub get_stylesheets() {
+	my $found = 0;
 
-		$sheet{filename}=$_;
+	my @stylesheets = map {
+		if($_ ne CSS_DIR . GLOBAL_STYLE) {
+			my %sheet;
 
-		($sheet{title})=m!([^/]+)\.css$!i;
-		$sheet{title}=ucfirst $sheet{title};
-		$sheet{title}=~s/_/ /g;
-		$sheet{title}=~s/ ([a-z])/ \u$1/g;
-		$sheet{title}=~s/([a-z])([A-Z])/$1 $2/g;
+			$sheet{filename} = $_;
 
-		if($sheet{title} eq DEFAULT_STYLE) { $sheet{default}=1; $found=1; }
-		else { $sheet{default}=0; }
+			($sheet{title}) = m!([^/]+)\.css$!i;
+			$sheet{title} = ucfirst $sheet{title};
+			$sheet{title} =~ s/_/ /g;
+			$sheet{title} =~ s/ ([a-z])/ \u$1/g;
+			$sheet{title} =~ s/([a-z])([A-Z])/$1 $2/g;
 
-		\%sheet;
-	} glob(CSS_DIR."*.css");
+			if($sheet{title} eq DEFAULT_STYLE) { $sheet{default} = 1; $found = 1; }
+			else { $sheet{default} = 0; }
 
-	$stylesheets[0]{default}=1 if(@stylesheets and !$found);
+			\%sheet;
+		}
+	} glob(CSS_DIR . "*.css");
 
+	$stylesheets[0]{default} = 1 if(@stylesheets and !$found);
 	return \@stylesheets;
 }
 
@@ -1213,8 +1196,6 @@ sub encode_admin_pass($)
 	return $crypt;
 }
 
-
-
 #
 # Error handling
 #
@@ -1232,8 +1213,6 @@ sub make_error($)
 
 	exit;
 }
-
-
 
 #
 # Image handling
