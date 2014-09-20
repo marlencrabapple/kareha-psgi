@@ -489,8 +489,11 @@ use constant BACKLOG_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 <if $postform>
 <a href="#newthread"><const S_NEWTHREAD_TITLE></a>
 <span class="longdash">—</span>
+}.include(INCLUDE_DIR."header.html").q{
 </if>
+<if !postform>
 <a href="<var expand_filename(HTML_SELF)>"><const S_RETURN></a>
+</if>
 </div>
 
 <div id="threads">
