@@ -185,6 +185,10 @@ body.threadpage .postform {
   border-bottom: 2px solid #ddd;
 }
 
+form.postform {
+  clear: both;
+}
+
 form.postform table {
   width: 400px;
   border-collapse: collapse;
@@ -224,10 +228,6 @@ form.postform input[type=button], form.postform input[type=submit] {
   box-sizing: border-box;
 }
 
-td.namelink {
-  white-space: nowrap;
-}
-
 textarea {
   width: 505px
 }
@@ -237,7 +237,7 @@ textarea {
 }
 
 #threadform .namelink input[type=text], #threadform .namelink input[type=email] {
-  width: 229px
+  width: 228px
 }
 
 #threadform input[type=submit] {
