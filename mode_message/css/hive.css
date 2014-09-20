@@ -160,7 +160,7 @@ thead { font-weight: bold; }
 #posts img.thumb, #posts a img {
   float: left;
   border: 1px solid #ddd;
-  margin: 0.5em 2em 0.5em 2em;
+  margin: 15px 20px;
 }
 #posts .nothumbnail {
   float: left;
