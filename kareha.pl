@@ -255,15 +255,27 @@ sub build_pages()
 			$$thread{prevnum}=($$thread{num}+(THREADS_DISPLAYED)-2)%(THREADS_DISPLAYED)+1;
 		}
 
-		write_array($$page{filename},MAIN_PAGE_TEMPLATE->(
-			%$page,
-			pages=>\@pages,
-			allthreads=>\@allthreads,
-			current=>$$page{page},
-		));
+		if(SUBBACK_INDEX) {
+			write_array($$page{filename}, BACKLOG_PAGE_TEMPLATE->(
+				threads => \@allthreads,
+				postform => 1
+			));
+		}
+		else {
+			write_array($$page{filename},MAIN_PAGE_TEMPLATE->(
+				%$page,
+				pages=>\@pages,
+				allthreads=>\@allthreads,
+				current=>$$page{page},
+			));
+		}
 	}
 
-	write_array(HTML_BACKLOG,BACKLOG_PAGE_TEMPLATE->(threads=>\@allthreads)) if(HTML_BACKLOG);
+	write_array(HTML_BACKLOG, BACKLOG_PAGE_TEMPLATE->(
+		threads => \@allthreads,
+		postform => SUBBACK_POSTFORM
+	)) if((HTML_BACKLOG) && (!SUBBACK_INDEX));
+
 	write_array(RSS_FILE,RSS_TEMPLATE->(threads=>\@allthreads)) if(RSS_FILE);
 
 	# delete extra pages

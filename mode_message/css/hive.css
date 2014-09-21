@@ -190,7 +190,6 @@ form.postform {
 }
 
 form.postform table {
-  width: 400px;
   border-collapse: collapse;
   border-spacing: 0;
   margin-bottom: 1em;
@@ -204,6 +203,18 @@ form.postform table tr td:last-child {
   padding-right: 0;
 }
 
+form.postform table tr input:last-child {
+  float: right
+}
+
+form.postform table tr input[type=file], form.postform table tr input[type=checkbox] {
+  float: none;
+}
+
+form.postform table input, form.postform table textarea {
+  border: 1px solid #ccc;
+}
+
 form.postform table input[type=text], form.postform table input[type=email], textarea {
   margin: 0;
   padding: 1px 2px;
@@ -211,11 +222,11 @@ form.postform table input[type=text], form.postform table input[type=email], tex
 }
 
 form.postform table input[type=text], form.postform table input[type=email] {
-  width: 185px;
+  width: 195px;
 }
 
 form.postform table input[type=submit] {
-  width:62px
+  width:60px
 }
 
 form.postform .options input[type=button] {
@@ -237,7 +248,7 @@ textarea {
 }
 
 #threadform .namelink input[type=text], #threadform .namelink input[type=email] {
-  width: 228px
+  width: 225px
 }
 
 #threadform input[type=submit] {
@@ -301,4 +312,19 @@ textarea {
 
 #footer {
   text-align: center
+}
+
+@media only screen and (max-width: 480px) {
+  body {
+    margin: 10px 15px;
+  }
+
+  .namelink {
+    white-space: pre;
+    vertical-align: top
+  }
+
+  .fpostblock:before {
+    content: '\A';
+  }
 }

@@ -110,6 +110,7 @@ use constant GLOBAL_HEAD_INCLUDE => q{
 <head>
 <title><if $title><var $title> - </if><const TITLE></title>
 <meta http-equiv="Content-Type" content="text/html;charset=<const CHARSET>" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="shortcut icon" href="<var expand_filename(FAVICON)>" />
 
 <if RSS_FILE>
@@ -161,14 +162,14 @@ use constant POSTING_FORM_TEMPLATE => compile_template(q{
 		<if FORCED_ANON><const S_LINK></if>
 	</td>
 	<td class="namelink">
+		<if SPAM_TRAP><div style="display:none"><const S_SPAMTRAP><input type="text" name="name" size="19" autocomplete="off" /><input type="text" name="link" size="19" autocomplete="off" /></div></if>
 		<if !FORCED_ANON>
-		  <input type="text" name="field_a" size="19" maxlength="<const MAX_FIELD_LENGTH>" /> <const S_LINK>
+		  <input type="text" name="field_a" size="19" maxlength="<const MAX_FIELD_LENGTH>" />
+			<span class="fpostblock"><const S_LINK></span>
 		</if>
 		<if FORCED_ANON><input type="hidden" name="field_a" /></if>
  		<input type="text" name="field_b" size="19" maxlength="<const MAX_FIELD_LENGTH>" />
 		<if $thread><input type="submit" value="<const S_REPLY>" /></if>
-		<if SPAM_TRAP><div style="display:none"><const S_SPAMTRAP><input type="text" name="name" size="19" autocomplete="off" /><input type="text" name="link" size="19" autocomplete="off" /></div></if>
-
 	</td>
 </tr>
 
@@ -487,6 +488,7 @@ use constant BACKLOG_PAGE_TEMPLATE => compile_template( GLOBAL_HEAD_INCLUDE.q{
 <div id="navigation">
 <strong><const S_NAVIGATION></strong>
 <if $postform>
+<script>set_stylesheet('<const DEFAULT_STYLE>'); set_preferred_stylesheet('<const DEFAULT_STYLE>');</script>
 <a href="#newthread"><const S_NEWTHREAD_TITLE></a>
 <span class="longdash">—</span>
 }.include(INCLUDE_DIR."header.html").q{
