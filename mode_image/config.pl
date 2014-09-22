@@ -56,7 +56,10 @@
 #use constant MAX_IMAGE_WIDTH => 16384;			# Maximum width of image before rejecting
 #use constant MAX_IMAGE_HEIGHT => 16384;		# Maximum height of image before rejecting
 #use constant MAX_IMAGE_PIXELS => 50000000;		# Maximum width*height of image before rejecting
-#use constant CONVERT_COMMAND => 'convert';		# location of the ImageMagick convert command (usually just 'convert', but sometime a full path is needed)
+#use constant CONVERT_COMMAND => 'convert';		# Location of the ImageMagick convert command (usually just 'convert', but sometime a full path is needed)
+#use constant FFMPEG_PATH => './ffmpeg';      # Just 'ffmpeg' if you installed it via your distro's package manager, or /path/to/ffmpeg otherwise
+#use constant FFPROBE_PATH => './ffprobe';     # See above
+
 
 # Captcha
 #use constant ENABLE_CAPTCHA => 0;				# Enable verification codes (0: disabled, 1: enabled)
