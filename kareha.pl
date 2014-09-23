@@ -22,8 +22,6 @@ return 1 if((caller)[1]=~/admin\.pl$/);
 # Global init
 #
 
-our @test;
-
 no strict; # disable strictness to create global variables visible to the templates
 $stylesheets=get_stylesheets();
 $markup_formats=[map +{id=>$_},MARKUP_FORMATS];
@@ -32,7 +30,7 @@ use strict;
 our $replyrange_re=qr{n?(?:[0-9\-,lrq]|&#44;)*[0-9\-lrq]}; # regexp to match reply ranges for >> links
 our $protocol_re=protocol_regexp();
 our $url_re=url_regexp();
-our ($log,$md5s,$ips);
+our ($log,$md5s,$ips,$keys,$delpasses);
 
 our $query=CGI->new;
 our $task=$query->param("task");
@@ -352,7 +350,7 @@ sub post_stuff($$$$$$$$$$$$)
 	# check captcha
 	if(ENABLE_CAPTCHA)
 	{
-		make_error(S_BADCAPTCHA) if find_key($log,$key);
+		make_error(S_BADCAPTCHA) if find_key($key);
 		make_error(S_BADCAPTCHA) if !check_captcha($key,$captcha);
 	}
 
@@ -697,7 +695,7 @@ sub delete_post($$$$)
 	my $admin_pass=check_admin_pass($password);
 
 	make_error(S_BADDELPASS) unless($password);
-	make_error(S_BADDELPASS) unless($admin_pass or match_password($log,$threadnum,$postnum,$password));
+	make_error(S_BADDELPASS) unless($admin_pass or match_password($threadnum,$postnum,$password));
 
 	my $reason;
 	if($admin_pass) { $reason="mod"; }
@@ -1055,45 +1053,42 @@ sub make_thread($$$)
 # Log fuctions
 #
 
-sub match_password($$$$)
-{
-	my ($log,$thread,$post,$password)=@_;
-	my $encpass=hide_password($password);
+sub match_password {
+	my ($thread,$post,$password) = @_;
+	my $encpass = hide_password($password);
+	my $logpass_ref = $$delpasses{$encpass};
 
 	return 0 unless(ENABLE_DELETION);
 
-	foreach(@{$log})
-	{
-		my @data=split /\s*,\s*/;
-		if($data[0]==$thread and $data[1]==$post)
-		{
- 			return 1 if($data[2] eq $encpass or decrypt_string($data[2],"cryptpass") eq $encpass);
- 		}
+	if(ref($logpass_ref)) {
+		foreach(@{$logpass_ref}) {
+			my @data = split /\s*,\s*/, ${$_};
+			return 1 if $data[0] == $thread and $data[1] == $post;
+		}
 	}
+
 	return 0;
 }
 
-sub find_key($$)
-{
-	my ($log,$key)=@_;
+sub find_key {
+	my ($key) = @_;
 
-	foreach(@{$log})
-	{
-		my @data=split /\s*,\s*/;
-		return 1 if($data[4] eq $key);
+	if(ref($$keys{$key})) {
+		my @data = split /\s*,\s*/, ${$$keys{$key}};
+		return 1;
 	}
+
 	return 0;
 }
 
-sub find_md5($$)
-{
-	my ($log,$md5)=@_;
+sub find_md5 {
+	my ($md5)=@_;
 
-	foreach(@{$log})
-	{
-		my @data=split /\s*,\s*/;
-		return ($data[0],$data[1]) if($data[5] eq $md5 and -e $data[6]);
+	if(ref($$md5s{$md5})) {
+		my @data = split /\s*,\s*/, ${$$md5s{$md5}};
+		return ($data[0],$data[1]) if -e $data[6];
 	}
+
 	return ();
 }
 
@@ -1105,7 +1100,20 @@ sub lock_log {
 	seek LOGFILE, 0, 0;
 
 	if($readlog) {
-		my @log = grep { /^([0-9]+)/; -e RES_DIR.$1.PAGE_EXT } read_array(\*LOGFILE);
+		my @log;
+
+		foreach my $row (grep { /^([0-9]+)/; -e RES_DIR.$1.PAGE_EXT } read_array(\*LOGFILE)) {
+			my @data = split /\s*,\s*/, $row;
+			unshift @log, $row;
+
+			my $ref = \$log[0];
+
+			push @{$$delpasses{decrypt_string($data[2], 'cryptpass')}}, $ref if $data[2];
+			$$keys{$data[4]} = $ref if $data[4];
+			$$ips{$data[3]} = $ref if $data[3];
+			$$md5s{$data[5]} = $ref if $data[5] and -e $data[6];
+		}
+
 		return \@log;
 	}
 
@@ -1122,14 +1130,14 @@ sub write_to_log {
 	close LOGFILE;
 }
 
-sub add_log($$$$$$$)
-{
-	my ($log,$thread,$post,$password,$ip,$key,$md5,$file)=@_;
+sub add_log {
+	my ($log,$thread,$post,$password,$ip,$key,$md5,$file) = @_;
 
-	$password=encrypt_string(hide_password($password),"cryptpass");
-	$ip=encrypt_string($ip,"ip");
+	my $encpass = encrypt_string($password = hide_password($password), "cryptpass");
+	$ip = encrypt_string($ip, "ip");
 
-	unshift @$log,"$thread,$post,$password,$ip,$key,$md5,$file";
+	unshift @$log,"$thread,$post,$encpass,$ip,$key,$md5,$file";
+	push @{$$delpasses{$password}}, $$keys{$key} = $$ips{$ip} = $$md5s{$md5} = \($$log[0]);
 }
 
 sub hide_password($)
@@ -1303,7 +1311,7 @@ sub process_file($$$)
 
 	if($md5) # if we managed to generate an md5 checksum, check for duplicate files
 	{
-		my ($thread,$post)=find_md5($log,$md5);
+		my ($thread,$post)=find_md5($md5);
 		if($thread)
 		{
 			unlink $filename; # make sure to remove the file
