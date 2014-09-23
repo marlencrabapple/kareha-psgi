@@ -970,19 +970,8 @@ sub filter_post_ranges($$;$)
 sub abbreviate_post($$)
 {
 	my ($post,$lines)=@_;
-
-#	if($post=~m!^(.*?<div class="replytext">)(.*?)(</div>.*$)!s)
-#	{
-#		my ($prefix,$comment,$postfix)=($1,$2,$3);
-#
-#		my $abbrev=abbreviate_html($comment,$lines,APPROX_LINE_LENGTH);
-#		return $prefix.$abbrev.$postfix if($abbrev);
-#	}
-#	else
-#	{
-		my $abbrev=abbreviate_html($post,$lines,APPROX_LINE_LENGTH);
-		return $abbrev if($abbrev);
-#	}
+	my $abbrev=abbreviate_html($post,$lines,APPROX_LINE_LENGTH);
+	return $abbrev if($abbrev);
 
 	return undef;
 }
@@ -1011,12 +1000,6 @@ sub in_range($$)
 		#elsif($range=~/^q([0-9]+)$/i) {} # q ranges never match
 	}
 	return 0;
-}
-
-sub update_thread($)
-{
-	my $thread=shift;
-
 }
 
 sub write_thread($)
@@ -1310,7 +1293,8 @@ sub process_file($$$)
 	}
 	else # otherwise, try using the md5sum command
 	{
-		my $md5sum=`md5sum $filename`; # filename is always the timestamp name, and thus safe
+		my $md5cmd = BSD_MD5 ? 'md5 -r' : 'md5sum';
+		my $md5sum=`$md5cmd $filename`; # filename is always the timestamp name, and thus safe
 		($md5)=$md5sum=~/^([0-9a-f]+)/ unless($?);
 	}
 
