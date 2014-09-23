@@ -61,6 +61,7 @@
 #use constant CONVERT_COMMAND => 'convert';		# Location of the ImageMagick convert command (usually just 'convert', but sometime a full path is needed)
 #use constant FFMPEG_PATH => './ffmpeg';      # Just 'ffmpeg' if you installed it via your distro's package manager, or /path/to/ffmpeg otherwise
 #use constant FFPROBE_PATH => './ffprobe';     # See above
+#use constant BSD_MD5 => 0;
 
 # Captcha
 #use constant ENABLE_CAPTCHA => 0;				# Enable verification codes (0: disabled, 1: enabled)

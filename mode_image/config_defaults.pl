@@ -61,6 +61,7 @@ BEGIN {
 	eval "use constant CONVERT_COMMAND => 'convert'" unless(defined &CONVERT_COMMAND);
 	eval "use constant FFMPEG_PATH => './ffmpeg'" unless(defined &FFMPEG_PATH);
 	eval "use constant FFPROBE_PATH => './ffprobe'" unless(defined &FFPROBE_PATH);
+	eval "use constant BSD_MD5 => 0" unless(defined &BSD_MD5);
 
 	# Captcha
 	eval "use constant ENABLE_CAPTCHA => 0" unless(defined &ENABLE_CAPTCHA);
