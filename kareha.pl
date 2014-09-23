@@ -22,6 +22,8 @@ return 1 if((caller)[1]=~/admin\.pl$/);
 # Global init
 #
 
+our @test;
+
 no strict; # disable strictness to create global variables visible to the templates
 $stylesheets=get_stylesheets();
 $markup_formats=[map +{id=>$_},MARKUP_FORMATS];
@@ -30,6 +32,7 @@ use strict;
 our $replyrange_re=qr{n?(?:[0-9\-,lrq]|&#44;)*[0-9\-lrq]}; # regexp to match reply ranges for >> links
 our $protocol_re=protocol_regexp();
 our $url_re=url_regexp();
+our ($log,$md5s,$ips);
 
 our $query=CGI->new;
 our $task=$query->param("task");
@@ -46,11 +49,12 @@ if(!$task)
 	if($ENV{PATH_INFO}) { show_thread($ENV{PATH_INFO}) }
 	else { make_http_forward(HTML_SELF,ALTERNATE_REDIRECT) }
 
-	prepare_for_exit(1);
+	prepare_to_res(1);
 	exit 0;
 }
 
-our $log=lock_log();
+my $readlog = $log ? 0 : 1;
+$log = lock_log($readlog);
 
 if($task eq "post")
 {
@@ -75,7 +79,7 @@ elsif($task eq "preview")
 	my $thread=$query->param("thread");
 
 	preview_post($comment,$markup,$thread);
-	prepare_for_exit();
+	prepare_to_res();
 
 	exit;
 }
@@ -122,7 +126,7 @@ else
 	make_error(S_NOTASK);
 }
 
-prepare_for_exit();
+prepare_to_res();
 
 if($query->param("r")) { make_http_forward($ENV{HTTP_REFERER},ALTERNATE_REDIRECT) }
 else { make_http_forward(HTML_SELF,ALTERNATE_REDIRECT) }
@@ -445,7 +449,7 @@ sub post_stuff($$$$$$$$$$$$)
 
 	if($noko) {
 		my $script = $ENV{SCRIPT_NAME};
-		prepare_for_exit();
+		prepare_to_res();
 
 		make_http_forward("$script/$thread/l50#reply$num",ALTERNATE_REDIRECT);
 		exit;
@@ -1093,28 +1097,27 @@ sub find_md5($$)
 	return ();
 }
 
-sub lock_log()
-{
-	open LOGFILE,"+>>".LOG_FILE or make_error(S_NOLOG);
-	eval "flock LOGFILE,LOCK_EX"; # may not work on some platforms - ignore it if it does not.
-	seek LOGFILE,0,0;
+sub lock_log {
+	my ($readlog) = @_;
 
-	my @log=grep { /^([0-9]+)/; -e RES_DIR.$1.PAGE_EXT } read_array(\*LOGFILE);
+	open LOGFILE, "+>>" . LOG_FILE or make_error(S_NOLOG);
+	eval "flock LOGFILE, LOCK_EX"; # may not work on some platforms - ignore it if it does not.
+	seek LOGFILE, 0, 0;
 
-	# should remove MD5 for deleted files somehow
-	return \@log;
+	if($readlog) {
+		my @log = grep { /^([0-9]+)/; -e RES_DIR.$1.PAGE_EXT } read_array(\*LOGFILE);
+		return \@log;
+	}
+
+	return $log;
 }
 
-sub release_log(;$)
-{
-	my ($log)=@_;
+sub write_to_log {
+	my ($log) = @_;
 
-	if($log)
-	{
-		seek LOGFILE,0,0;
-		truncate LOGFILE,0;
-		write_array(\*LOGFILE,@$log);
-	}
+	seek LOGFILE, 0, 0;
+	truncate LOGFILE, 0;
+	write_array(\*LOGFILE, @$log);
 
 	close LOGFILE;
 }
@@ -1152,8 +1155,8 @@ sub decrypt_string($$)
 # Utility funtions
 #
 
-sub prepare_for_exit {
-	release_log($log) unless shift;
+sub prepare_to_res {
+	write_to_log($log) unless shift;
 	CGI::initialize_globals();
 }
 
@@ -1205,7 +1208,7 @@ sub make_error($)
 {
 	my ($error)=@_;
 
-	prepare_for_exit();
+	prepare_to_res();
 
 	print "Content-Type: ".get_xhtml_content_type(CHARSET,USE_XHTML)."\n";
 	print "\n";
