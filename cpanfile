@@ -1,13 +1,40 @@
-requires 'CGI'; # this will be removed from the core modules in v5.22 so it
-                # will probably need downloading from cpan at some point
+requires 'perl', 'v5.40';
 
-requires 'CGI::Compile';
-requires 'CGI::Emulate::PSGI';
+requires 'Object::Pad';
 
-requires 'JSON'; # this will probably be used a lot more in future releases
-                 # plus i think its a core module now so i don't feel too guilty
-                 
-requires 'Plack';
-requires 'Plack::Builder';
-requires 'Plack::App::File';
-requires 'Plack::App::WrapCGI';
+requires 'TOML::Tiny';
+requires 'Crypt::Argon2';
+requires 'List::AllUtils';
+requires 'Syntax::Keyword::Try';
+requires 'System::CPU', '1.03';
+
+requires 'Plack', '1.0052',
+  dist => 'CRABAPP/Plack-1.0052-TRIAL.tar.gz';
+
+requires 'Frame', '0.1.3',
+  dist => 'CRABAPP/Frame-0.1.3-TRIAL.tar.gz';
+
+requires 'JSON::MaybeXS', '1.004003';
+
+requires 'CGI::Compile', '0.25';
+requires 'CGI::Emulate::PSGI', '0.23';
+
+requires 'DBI', '1.643';
+requires 'DBD::SQLite', '1.70';
+
+requires 'Path::Tiny', '0.122';
+requires 'Data::Printer';
+
+on 'develop' => sub {
+  requires 'Perl::Tidy', '20220613';
+  requires 'Perl::Critic', '1.140';
+  requires 'Perl::Critic::Community';
+};
+
+on 'test' => sub {
+  requires 'Test::More', '0.98';
+};
+
+on 'build' => sub {
+  requires 'Minilla'
+};

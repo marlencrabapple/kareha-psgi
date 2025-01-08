@@ -15,8 +15,8 @@ return 1 if(caller);
 
 
 
-my $font_height=8;
-my %font=(
+our $font_height=8;
+our %font=(
 	a=>[4,[0,2,1,1,2,1,3,2,3,5,4,6],[3,3,1,3,0,4,0,5,1,6,2,6,3,5]],
 	b=>[3,[0,0,0,6,2,6,3,5,3,4,2,3,0,3]],
 	c=>[3,[3,6,1,6,0,5,0,4,1,3,3,3]],
@@ -47,13 +47,13 @@ my %font=(
 );
 
 
-my $query=new CGI;
-my $key=$query->cookie("captchakey");
-my $selector=($query->param("selector") or ".captcha");
-my $style=($query->cookie("karehastyle") or DEFAULT_STYLE);
+our $query=new CGI;
+our $key=$query->cookie("captchakey");
+our $selector=($query->param("selector") or ".captcha");
+our $style=($query->cookie("karehastyle") or DEFAULT_STYLE);
 
-my @foreground=find_stylesheet_color($style,$selector);
-my @background=(0xff,0xff,0xff);
+our @foreground=find_stylesheet_color($style,$selector);
+our @background=(0xff,0xff,0xff);
 
 if(!$key)
 {

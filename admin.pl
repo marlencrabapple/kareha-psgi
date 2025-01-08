@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+use v5.36;
 
 use CGI::Carp qw(fatalsToBrowser);
 
@@ -10,18 +11,13 @@ use lib '.';
 BEGIN { require 'config.pl'; }
 BEGIN { require 'config_defaults.pl'; }
 BEGIN { require 'wakautils.pl'; }
-BEGIN { require 'kareha.pl'; }
-
-
-use constant KAREHA_SCRIPT => 'kareha.pl';
-
+#BEGIN { require 'kareha.pl'; }
 
 
 use constant MASK_PASSWD => make_key("mask",SECRET,16);
 use constant IP_PASSWD => rc4(null_string(32),"ip".SECRET);
 use constant PASS_PASSWD => rc4(null_string(32),"cryptpass".SECRET);
 use constant ENCODED_PASS => encode_admin_pass(ADMIN_PASS);
-
 
 
 use constant ADMIN_HEAD_INCLUDE => q{<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -219,11 +215,11 @@ Admin password:
 
 
 
-my @threads=get_threads(1);
-my %log=read_log();
+our @threads=get_threads(1);
+our %log=read_log();
 
-my $query=new CGI;
-my $pass=$query->cookie("adminpass");
+our $query=new CGI;
+our $pass=$query->cookie("adminpass");
 
 if($pass ne ENCODED_PASS)
 {
@@ -246,9 +242,9 @@ if($pass ne ENCODED_PASS)
 	}
 }
 
-my @shownthreads;
-my $showlist;
-my ($threadnum,$ranges,$list,$edit,$ban,$logout,$page)=$ENV{PATH_INFO}=~
+our @shownthreads;
+our $showlist;
+our ($threadnum,$ranges,$list,$edit,$ban,$logout,$page)=$ENV{PATH_INFO}=~
 	m!/(?:([0-9]+)(?:/(.*)|)|(list)|(edit)|(ban)|(logout)|p([0-9]+))!i;
 
 if($threadnum)

@@ -1,30 +1,32 @@
 #!/usr/bin/perl
 
+use v5.36;
+
+use Data::Printer;
 use CGI::Carp qw(fatalsToBrowser);
-
-use strict;
-
 use CGI;
-use JSON;
+use JSON::MaybeXS;
 use Data::Dumper;
 use Fcntl ':flock';
 
-use lib '.';
 BEGIN { require 'config.pl'; }
 BEGIN { require 'config_defaults.pl'; }
 BEGIN { require 'templates.pl'; }
 BEGIN { require 'captcha.pl'; }
 BEGIN { require 'wakautils.pl'; }
 
-return 1 if((caller)[1]=~/admin\.pl$/);
+#our $_caller = [ caller ];
+#say p($_caller);
+#return 1 if((caller)[1]=~/admin\.pl$/);
 
 #
 # Global init
 #
 
 no strict; # disable strictness to create global variables visible to the templates
-$stylesheets=get_stylesheets();
+our $stylesheets=get_stylesheets();
 $markup_formats=[map +{id=>$_},MARKUP_FORMATS];
+
 use strict;
 
 our $replyrange_re=qr{n?(?:[0-9\-,lrq]|&#44;)*[0-9\-lrq]}; # regexp to match reply ranges for >> links
@@ -131,8 +133,7 @@ else { make_http_forward(HTML_SELF,ALTERNATE_REDIRECT) }
 # End of main code
 #
 
-sub show_thread($)
-{
+sub show_thread {
 	my ($path)=@_;
 	my ($threadnum,$ranges)=$path=~m!/([0-9]+)(?:/(.*)|)!i;
 	my $modified=(stat RES_DIR.$threadnum.PAGE_EXT)[9];
@@ -163,7 +164,7 @@ sub show_thread($)
 	);
 }
 
-sub build_pages()
+sub build_pages
 {
 	my @allthreads=get_threads(1);
 	my @copy=@allthreads;
@@ -291,7 +292,7 @@ sub build_pages()
 	}
 }
 
-sub update_threads()
+sub update_threads
 {
 	my @threads=get_threads(1);
 
@@ -306,8 +307,8 @@ sub update_threads()
 # Posting
 #
 
-sub post_stuff($$$$$$$$$$$$)
-{
+#sub post_stuff 
+sub post_stuff {
 	my ($thread,$name,$link,$title,$comment,$captcha,$key,$password,$markup,$savemarkup,$file,$uploadname)=@_;
 
 	# get a timestamp for future use
@@ -452,8 +453,7 @@ sub post_stuff($$$$$$$$$$$$)
 	}
 }
 
-sub preview_post($$$)
-{
+sub preview_post {
 	my ($comment,$markup,$thread)=@_;
 
 	$thread=time() unless $thread;
@@ -469,7 +469,7 @@ sub preview_post($$$)
 	print $comment;
 }
 
-sub proxy_check($)
+sub proxy_check 
 {
 	my ($ip)=@_;
 
@@ -480,8 +480,7 @@ sub proxy_check($)
 	}
 }
 
-sub format_comment($$$)
-{
+sub format_comment {
 	my ($comment,$markup,$thread)=@_;
 
 	$markup=DEFAULT_MARKUP unless grep $markup eq $_,MARKUP_FORMATS;
@@ -498,7 +497,7 @@ sub format_comment($$$)
 	return $comment;
 }
 
-sub simple_format($$)
+sub simple_format 
 {
 	my ($text,$thread)=@_;
 
@@ -515,14 +514,14 @@ sub simple_format($$)
 	} split /(?:\r\n|\n|\r)/,clean_string(decode_string($text));
 }
 
-sub aa_format($$)
+sub aa_format 
 {
 	my ($text,$thread)=@_;
 
 	return '<div class="aa">'.simple_format($text,$thread).'</div>';
 }
 
-sub wakabamark_format($$)
+sub wakabamark_format 
 {
 	my ($text,$thread)=@_;
 
@@ -546,7 +545,7 @@ sub wakabamark_format($$)
 	return $text;
 }
 
-sub html_format($$)
+sub html_format 
 {
 	my ($text,$thread)=@_;
 
@@ -558,7 +557,7 @@ sub html_format($$)
 	return $text;
 }
 
-sub raw_html_format($4)
+sub raw_html_format 
 {
 	my ($text,$thread)=@_;
 
@@ -568,7 +567,7 @@ sub raw_html_format($4)
 	return $text;
 }
 
-sub make_anonymous($$$)
+sub make_anonymous 
 {
 	my ($ip,$time,$thread)=@_;
 
@@ -594,7 +593,7 @@ sub make_anonymous($$$)
 	);
 }
 
-sub make_id_code($$$$)
+sub make_id_code 
 {
 	my ($ip,$time,$link,$thread)=@_;
 
@@ -614,7 +613,7 @@ sub make_id_code($$$$)
 	return hide_data($ip.$string,6,"id",SECRET,1);
 }
 
-sub make_reply(%)
+sub make_reply 
 {
 	my (%vars)=@_;
 
@@ -638,7 +637,7 @@ sub make_reply(%)
 # Deleting
 #
 
-sub delete_stuff($@)
+sub delete_stuff 
 {
 	my ($password,$fileonly,@posts)=@_;
 
@@ -652,7 +651,7 @@ sub delete_stuff($@)
 	build_pages();
 }
 
-sub trim_threads()
+sub trim_threads
 {
 	my @threads=get_threads(TRIM_METHOD);
 
@@ -687,7 +686,7 @@ sub trim_threads()
 	}
 }
 
-sub delete_post($$$$)
+sub delete_post 
 {
 	my ($threadnum,$postnum,$password,$fileonly)=@_;
 	my $admin_pass=check_admin_pass($password);
@@ -719,7 +718,7 @@ sub delete_post($$$$)
 	}
 }
 
-sub delete_thread($)
+sub delete_thread 
 {
 	my ($threadnum)=@_;
 
@@ -735,7 +734,7 @@ sub delete_thread($)
 	build_pages();
 }
 
-sub permasage_thread($$)
+sub permasage_thread 
 {
 	my ($threadnum,$state)=@_;
 
@@ -748,7 +747,7 @@ sub permasage_thread($$)
 	build_pages();
 }
 
-sub close_thread($$)
+sub close_thread 
 {
 	my ($threadnum,$state)=@_;
 
@@ -765,7 +764,7 @@ sub close_thread($$)
 # Thread access utils
 #
 
-sub get_threads($)
+sub get_threads 
 {
 	my ($bumped)=@_;
 
@@ -780,7 +779,7 @@ sub get_threads($)
 	return @pages;
 }
 
-sub get_thread($)
+sub get_thread 
 {
 	my ($arg)=@_;
 	my ($thread,$filename);
@@ -815,7 +814,7 @@ sub get_thread($)
 	}
 }
 
-sub read_thread($)
+sub read_thread 
 {
 	my $thread=shift;
 
@@ -836,14 +835,14 @@ sub read_thread($)
 	return $thread;
 }
 
-sub get_post_text($$)
+sub get_post_text 
 {
 	my ($thread,$postnum)=@_;
 	$thread=read_thread($thread);
 	return $$thread{allposts}[$postnum-1]{text};
 }
 
-sub set_post_text($$$)
+sub set_post_text 
 {
 	my ($thread,$postnum,$text)=@_;
 	$thread=read_thread($thread);
@@ -851,7 +850,7 @@ sub set_post_text($$$)
 	return $thread;
 }
 
-sub get_post_images($$)
+sub get_post_images 
 {
 	my ($thread,$postnum)=@_;
 	my $post=get_post_text($thread,$postnum);
@@ -866,7 +865,7 @@ sub get_post_images($$)
 	return map { s/\%([0-9a-fA-F]{2})/chr hex $1/ge; $_ } @images;
 }
 
-sub filter_post_ranges($$;$)
+sub filter_post_ranges 
 {
 	my ($thread,$ranges,$lines)=@_;
 
@@ -967,7 +966,7 @@ sub filter_post_ranges($$;$)
 	return $thread;
 }
 
-sub abbreviate_post($$)
+sub abbreviate_post 
 {
 	my ($post,$lines)=@_;
 
@@ -987,7 +986,7 @@ sub abbreviate_post($$)
 	return undef;
 }
 
-sub in_range($$)
+sub in_range 
 {
 	my ($num,$ranges)=@_;
 
@@ -1013,13 +1012,13 @@ sub in_range($$)
 	return 0;
 }
 
-sub update_thread($)
+sub update_thread 
 {
 	my $thread=shift;
 
 }
 
-sub write_thread($)
+sub write_thread 
 {
 	my $thread=shift;
 
@@ -1038,7 +1037,7 @@ sub write_thread($)
 	write_array($$thread{filename},@page);
 }
 
-sub make_thread($$$)
+sub make_thread 
 {
 	my ($title,$time,$author)=@_;
 	my $filename=RES_DIR.$time.PAGE_EXT;
@@ -1068,7 +1067,7 @@ sub make_thread($$$)
 # Log fuctions
 #
 
-sub match_password($$$$)
+sub match_password 
 {
 	my ($log,$thread,$post,$password)=@_;
 	my $encpass=hide_password($password);
@@ -1086,7 +1085,7 @@ sub match_password($$$$)
 	return 0;
 }
 
-sub find_key($$)
+sub find_key 
 {
 	my ($log,$key)=@_;
 
@@ -1098,7 +1097,7 @@ sub find_key($$)
 	return 0;
 }
 
-sub find_md5($$)
+sub find_md5 
 {
 	my ($log,$md5)=@_;
 
@@ -1110,7 +1109,7 @@ sub find_md5($$)
 	return ();
 }
 
-sub lock_log()
+sub lock_log
 {
 	open LOGFILE,"+>>".LOG_FILE or make_error(S_NOLOG);
 	eval "flock LOGFILE,LOCK_EX"; # may not work on some platforms - ignore it if it does not.
@@ -1122,7 +1121,7 @@ sub lock_log()
 	return \@log;
 }
 
-sub release_log(;$)
+sub release_log 
 {
 	my ($log)=@_;
 
@@ -1136,7 +1135,7 @@ sub release_log(;$)
 	close LOGFILE;
 }
 
-sub add_log($$$$$$$)
+sub add_log 
 {
 	my ($log,$thread,$post,$password,$ip,$key,$md5,$file)=@_;
 
@@ -1146,19 +1145,19 @@ sub add_log($$$$$$$)
 	unshift @$log,"$thread,$post,$password,$ip,$key,$md5,$file";
 }
 
-sub hide_password($)
+sub hide_password 
 {
 	return hide_data(shift,6,"password",SECRET,1)
 }
 
-sub encrypt_string($$)
+sub encrypt_string 
 {
 	my ($str,$key)=@_;
 	my $iv=make_random_string(8);
 	return $iv.';'.encode_base64(rc4($str,make_key($key,SECRET,32).$iv),"");
 }
 
-sub decrypt_string($$)
+sub decrypt_string 
 {
 	my ($str,$key)=@_;
 	my ($iv,$crypt)=$str=~/(.*?);(.*)/;
@@ -1174,7 +1173,7 @@ sub prepare_for_exit {
 	CGI::initialize_globals();
 }
 
-sub get_stylesheets() {
+sub get_stylesheets{
 	my $found = 0;
 
 	my @stylesheets = map {
@@ -1199,7 +1198,7 @@ sub get_stylesheets() {
 	return \@stylesheets;
 }
 
-sub check_admin_pass($)
+sub check_admin_pass 
 {
 	my $password=shift;
 	return 1 if $password eq ADMIN_PASS;
@@ -1207,7 +1206,7 @@ sub check_admin_pass($)
 	return 0;
 }
 
-sub encode_admin_pass($)
+sub encode_admin_pass 
 {
 	my $crypt=hide_data((shift).$ENV{REMOTE_ADDR},9,"admin",SECRET,1);
 	$crypt=~tr/+/./; # for web shit
@@ -1218,7 +1217,7 @@ sub encode_admin_pass($)
 # Error handling
 #
 
-sub make_error($)
+sub make_error 
 {
 	my ($error)=@_;
 
@@ -1235,14 +1234,14 @@ sub make_error($)
 # Image handling
 #
 
-sub get_filetypes()
+sub get_filetypes
 {
 	my %filetypes=FILETYPES;
 	$filetypes{gif}=$filetypes{jpg}=$filetypes{png}=1;
 	return join ", ",map { uc } sort keys %filetypes;
 }
 
-sub process_file($$$)
+sub process_file 
 {
 	my ($file,$uploadname,$time)=@_;
 	my %filetypes=FILETYPES;
@@ -1263,6 +1262,8 @@ sub process_file($$$)
 	# the actual filename is still passed as $uploadname for determining the file
 	# extension.
 	my ($ext,$width,$height) = analyze_image($query->tmpFileName($file),$uploadname);
+
+	p($uploadname);
 
 	if(($ext eq "webm") && (!$height)) {
 		make_error(S_INVALIDWEBM) if $width == 1;
@@ -1389,7 +1390,7 @@ sub process_file($$$)
 	return ($filename,$ext,$size,$md5,$width,$height,$thumbnail,$tn_width,$tn_height);
 }
 
-sub get_thumbnail_dimensions($$) {
+sub get_thumbnail_dimensions {
 	my ($width,$height) = @_;
 	my ($tn_width,$tn_height);
 

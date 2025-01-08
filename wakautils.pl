@@ -4,7 +4,9 @@ use strict;
 
 use Time::Local;
 use Socket;
-use JSON;
+use JSON::MaybeXS;
+use File::Basename;
+use Data::Printer;
 
 our $has_md5=0;
 eval 'use Digest::MD5 qw(md5)';
@@ -1104,7 +1106,8 @@ sub analyze_image($$) {
 	return ("gif", @res) if(@res = analyze_gif($name));
 
 	if(ALLOW_WEBM) {
-		return ("webm", @res) if(@res = analyze_webm($file));
+		@res = analyze_webm($file);
+		return ("webm", @res) if scalar @res == 2 #if(@res = analyze_webm($file));
 	}
 
 	# find file extension for unknown files
@@ -1204,6 +1207,8 @@ sub analyze_webm {
 	# get webm info
 	$stdout = `$ffprobe -v quiet -print_format json -show_format -show_streams $file`;
 	$stdout = decode_json($stdout) or return 1;
+
+	p($stdout);
 
 	# check if file is legitimate
 	return 1 if(!%$stdout); # empty json response from ffprobe
