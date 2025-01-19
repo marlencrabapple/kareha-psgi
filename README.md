@@ -1,16 +1,22 @@
-kareha-psgi
-===========
+# NAME
 
-## Intro ##
-This is the same Kareha you know and love with a potentially huge speed boost.
+kareha::psgi - It's new $module
 
-## How To Use ##
-1. Grab Kareha from this repo.
+# SYNOPSIS
 
-        $ git clone https://github.com/marlencrabapple/kareha-psgi.git
+    use kareha::psgi
 
-2. Follow whatever instructions are provided on http://wakaba.c3.cx/s/web/wakaba_kareha for configuring Kareha, and then run the following. You won't have to do anything else if you're only interested in seeing what this is all about. An actual production install requires a little more work and is dependent on your server setup, needs, and software preferences.
+# DESCRIPTION
 
-        $ cd <your install dir>
-        $ sudo cpanm --installdeps .
-        $ plackup app.psgi
+App::BS is ...
+
+# LICENSE
+
+Copyright (C) Ian P Bradley.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+# AUTHOR
+
+Ian P Bradley <ian.bradley@studiocrabapple.com>

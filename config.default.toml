@@ -1,0 +1,191 @@
+#
+# Example config file.
+#
+# Uncomment and edit the options you want to specifically change from the
+# default values. You must specify admin_pass and secret.
+#
+
+# System config
+admin_pass = ''
+secret = ''
+capped_trips = { '!!example1' = ' capcode', '!!example2' = '<em>cap</em>' }
+
+
+# Page look
+title = 'Karea message board'
+showtitletxt = 1
+showtitleimg = 1
+titleimg = 'title.jpg'
+threads_displayed = 10
+threads_listed = 40
+replies_per_thread = 10
+s_anoname = 'Anonymous'
+default_style = 'Headline'
+favicon = 'kareha.ico'
+
+
+# Limitations
+allow_text_threads = 1
+allow_text_replies = 1
+autoclose_posts = 1000
+autoclose_days = 0
+autoclose_size = 0
+max_res = 999999999
+max_threads = 0
+max_posts = 0
+max_megabytes = 0
+max_field_length = 100
+max_comment_length = 8192
+max_lines_shown = 15
+allow_admin_edit = 0
+
+
+# Image posts
+allow_image_threads = 1			
+allow_image_replies = 1			
+animated_thumbnails = 1    
+allow_webm = 1              
+image_replies_per_thread = 0	
+max_kb = 1000					
+max_w = 200						
+max_h = 200						
+thumbnail_small = 1				
+thumbnail_quality = 70			
+allow_unknown = 1				
+munge_unknown = ''		
+forbidden_extensions = [ 'php', 'php3', 'php4', 'phtml', 'shtml', 'cgi', 'pl'
+                         , 'pm', 'py', 'r', 'exe', 'dll', 'scr', 'pif', 'asp'
+                         , 'cfm','jsp','vbs' ]
+stupid_thumbnailing = 0	
+max_image_width = 16384			
+max_image_height = 16384		
+max_image_pixels = 50000000		
+convert_command = 'convert'		
+ffmpeg_path = 'ffmpeg' 
+ffprobe_path = 'ffprobe'
+
+
+# Captcha
+enable_captcha = 0				
+captcha_height = 18				
+captcha_scribble = 0.2			
+captcha_scaling = 0.15			
+captcha_rotation = 0.3			
+captcha_spacing = 2.5
+
+
+# Tweaks
+charset = 'utf-8'				
+proxy_check = []	
+trim_method = 1	
+require_thread_title = 1		
+date_style = '2ch'				
+display_id = 'thread board sage'                #  'day', 'thread', 'board' in any combination: make IDs change for each day, thread or board,
+												#  'mask': display masked IP address (similar IPs look similar, but are still encrypted)
+												#  'sage': don't display ID when user sages, 'link': don't display ID when the user fills out the link field,
+												#  'ip': display user's IP, 'host': display user's host)
+email_id = 'Heaven'				
+silly_anonymous = ''			
+forced_anon = 0					
+tripkey = '!'					
+alternate_redirect = 0			
+approx_line_length = 150		
+cookie_path = 'root'			
+style_cookie = 'karehastyle'	
+enable_deletion = 1				
+page_generation = 'single'		
+delete_first = 'single'			
+markup_formats = [ 'none', 'waka', 'html', 'aa' ]
+default_markup = 'waka'			
+fudge_blockquotes = 0			
+use_xhtml = 0					
+keep_mainpage_newlines = 0		
+spam_trap = 1				
+
+
+# Internal paths and files - might as well leave this alone.
+res_dir = 'res/'				
+css_dir = 'css/'				
+img_dir = 'src/'				
+thumb_dir = 'thumb/'			
+include_dir = 'include/'		
+log_file = 'log.txt'			
+page_ext = '.html'				
+html_self = 'index.html'		
+html_backlog = 'subback.html'	
+rss_file = 'index.rss'			
+js_file = 'kareha.js'			
+spam_files = [ 'spam.txt' ]	                    # Hints: * Set all boards to use the same file for easy updating.
+												#        * Set up two files, one being the official list from
+												#          http://wakaba.c3.cx/antispam/spam.txt, and one your own additions.
+
+# Admin script options    
+admin_shown_lines = 5				
+admin_shown_posts = 10				
+admin_mask_ips = 0					
+admin_editable_files = [ 'spam.txt' ]	            # Hints: * If you don't trust your moderators, don't let them edit templates!
+                                                    #          Templates can execute code on your server!
+                                                    #        * If you still want to allow editing of templates, use
+                                                    #          (SPAM_FILES,glob("include/*")) as a convenient shorthand.
+admin_ban_file = '.htaccess'		
+#admin_ban_template = "\n=                          # Format of the ban entries, using the template syntax.
+
+
+# Icons for filetypes - file extensions specified here will not be renamed, and will get icons
+# (except for the built-in image formats). These example icons can be found in the extras/ directory.
+[filetypes]
+# Audio files
+mp3 = 'icons/audio-mp3.png'
+ogg = 'icons/audio-ogg.png'
+aac = 'icons/audio-aac.png'
+m4a = 'icons/audio-aac.png'
+mpc = 'icons/audio-mpc.png'
+mpp = 'icons/audio-mpp.png'
+mod = 'icons/audio-mod.png'
+it = 'icons/audio-it.png'
+xm = 'icons/audio-xm.png'
+fla = 'icons/audio-flac.png'
+flac = 'icons/audio-flac.png'
+sid = 'icons/audio-sid.png'
+mo3 = 'icons/audio-mo3.png'
+spc = 'icons/audio-spc.png'
+nsf = 'icons/audio-nsf.png'
+
+# Archive files
+zip = 'icons/archive-zip.png'
+rar = 'icons/archive-rar.png'
+lzh = 'icons/archive-lzh.png'
+lha = 'icons/archive-lzh.png'
+gz = 'icons/archive-gz.png'
+bz2 = 'icons/archive-bz2.png'
+7z = 'icons/archive-7z.png'
+
+# Other files
+swf = 'icons/flash.png'
+torrent = 'icons/torrent.png'
+
+# To stop Wakaba from renaming image files, put their names in here like this:
+gif = '.'
+jpg = '.'
+png = '.'
+
+# Allowed HTML tags and attributes. Sort of undocumented for now, but feel free to
+# learn by example.
+[allowed_html]
+a = { args = { href = "url" }, forced = { rel = "nofollow" } }
+b = {}
+i = {}
+u = {}
+sub = {}
+sup = {}
+em = {}
+strong = {}
+ul = {}
+ol = {}
+li = {}
+dl = {}
+dt = {}
+dd = {}
+p = {}
+br = { empty = 1 }
+blockquote = {}

@@ -1,4 +1,7 @@
-#!/usr/bin/perl
+use Object::Pad;
+
+package captcha;
+role captcha :does(kareha::config) :does(kareha::config::defaults) :does(wakautils);
 
 use CGI::Carp qw(fatalsToBrowser);
 
@@ -7,9 +10,9 @@ use strict;
 use CGI;
 
 use lib '.';
-BEGIN { require "config.pl"; }
-BEGIN { require "config_defaults.pl"; }
-BEGIN { require "wakautils.pl"; }
+# BEGIN { require "config.pl"; }
+# BEGIN { require "config_defaults.pl"; }
+# BEGIN { require "wakautils.pl"; }
 
 return 1 if(caller);
 

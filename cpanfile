@@ -7,15 +7,23 @@ requires 'Crypt::Argon2';
 requires 'List::AllUtils';
 requires 'Syntax::Keyword::Try';
 requires 'System::CPU', '1.03';
+requires 'List::AllUtils';
 
-requires 'Plack', '1.0052',
-  dist => 'CRABAPP/Plack-1.0052-TRIAL.tar.gz';
+requires 'FFmpeg::Inline',
+  url => "file://$ENV{HOME}/FFmpeg-Inline/FFmpeg-Inline-0.01.tar.gz",
+  dist => 'CRABAPP/FFmpeg-Inline-0.01-TRIAL.tar.gz';
 
-requires 'Frame', '0.1.3',
-  dist => 'CRABAPP/Frame-0.1.3-TRIAL.tar.gz';
+requires 'Plack', '1.0053',
+  url => "file://$ENV{HOME}/Plack/Plack-1.0053-TRIAL.tar.gz",
+  dist => 'CRABAPP/Plack-1.0053-TRIAL.tar.gz';
+
+requires 'Frame', '0.01.2',
+  url => "file://$ENV{HOME}/Frame/Frame-0.01.2-TRIAL.tar.gz",
+  dist => 'CRABAPP/Frame-0.01.2-TRIAL.tar.gz';
 
 requires 'JSON::MaybeXS', '1.004003';
 
+requires 'CGI::PSGI';
 requires 'CGI::Compile', '0.25';
 requires 'CGI::Emulate::PSGI', '0.23';
 
@@ -24,6 +32,12 @@ requires 'DBD::SQLite', '1.70';
 
 requires 'Path::Tiny', '0.122';
 requires 'Data::Printer';
+requires 'Const::Exporter';
+requires 'Const::Fast::Exporter';
+requires 'Exporter::Constants';
+requires 'Const::Exporter';
+requires 'Const::Fast::Exporter';
+requires 'Exporter::Constants';
 
 on 'develop' => sub {
   requires 'Perl::Tidy', '20220613';

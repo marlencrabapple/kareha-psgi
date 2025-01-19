@@ -1,5 +1,10 @@
-#!/usr/bin/perl
-use v5.36;
+use Object::Pad;
+
+package kareha::admin;
+class kareha::admin :does(kareha::config) :does(wakautils);
+
+use utf8;
+use v5.40;
 
 use CGI::Carp qw(fatalsToBrowser);
 
@@ -7,10 +12,10 @@ use strict;
 
 use CGI;
 
-use lib '.';
-BEGIN { require 'config.pl'; }
-BEGIN { require 'config_defaults.pl'; }
-BEGIN { require 'wakautils.pl'; }
+#use lib '.';
+#BEGIN { require 'config.pl'; }
+#BEGIN { require 'config_defaults.pl'; }
+##BEGIN { require 'wakautils.pl'; }
 #BEGIN { require 'kareha.pl'; }
 
 
@@ -218,7 +223,7 @@ Admin password:
 our @threads=get_threads(1);
 our %log=read_log();
 
-our $query=new CGI;
+our $query = CGI->new;
 our $pass=$query->cookie("adminpass");
 
 if($pass ne ENCODED_PASS)
@@ -295,10 +300,8 @@ else
 	);
 }
 
-sub show_threads(@)
+sub show_threads(@shownthreads)
 {
-	my @shownthreads=@_;
-
 	foreach my $thread (@shownthreads)
 	{
 		foreach my $post (@{$$thread{posts}})
@@ -335,10 +338,8 @@ sub show_list()
 	);
 }
 
-sub show_edit($)
+sub show_edit($filename)
 {
-	my ($filename)=@_;
-
 	my $contents=join "\n",read_array($filename);
 
 	print_http_header();
@@ -349,18 +350,15 @@ sub show_edit($)
 	);
 }
 
-sub do_save($$)
+sub do_save($filename,$contents)
 {
-	my ($filename,$contents)=@_;
-
 	write_array($filename,$contents);
 
 	make_http_forward($ENV{SCRIPT_NAME},ALTERNATE_REDIRECT);
 }
 
-sub do_ban($$)
+sub do_ban($id,$reason)
 {
-	my ($id,$reason)=@_;
 	my $ip;
 
 	if($id=~/^\d+\.\d+\.\d+\.\d+$/) { $ip=$id }
@@ -408,9 +406,8 @@ sub read_log()
 	return %posts;
 }
 
-sub decrypt_ip($)
+sub decrypt_ip($str)
 {
-	my ($str)=@_;
 	my ($iv,$cipher);
 
 	if(($iv,$cipher)=$str=~/^(.*?)!(.*)$/)

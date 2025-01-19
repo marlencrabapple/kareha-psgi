@@ -1,0 +1,99 @@
+{
+   "abstract" : "It's new $module",
+   "author" : [
+      "Ian P Bradley <ian.bradley@studiocrabapple.com>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Minilla/v3.1.25, CPAN::Meta::Converter version 2.150010",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : 2
+   },
+   "name" : "kareha-psgi",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples",
+         "author",
+         "builder"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Minilla" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build::Tiny" : "0.035"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Perl::Critic" : "1.140",
+            "Perl::Critic::Community" : "0",
+            "Perl::Tidy" : "20220613",
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion::Fast" : "0.04",
+            "Test::PAUSE::Permissions" : "0.07",
+            "Test::Pod" : "1.41",
+            "Test::Spellunker" : "v0.2.7"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "CGI::Compile" : "0.25",
+            "CGI::Emulate::PSGI" : "0.23",
+            "Const::Exporter" : "0",
+            "Const::Fast::Exporter" : "0",
+            "Crypt::Argon2" : "0",
+            "DBD::SQLite" : "1.70",
+            "DBI" : "1.643",
+            "Data::Printer" : "0",
+            "Exporter::Constants" : "0",
+            "FFmpeg::Inline" : "0",
+            "Frame" : "v0.1.2",
+            "JSON::MaybeXS" : "1.004003",
+            "List::AllUtils" : "0",
+            "Object::Pad" : "0",
+            "Path::Tiny" : "0.122",
+            "Plack" : "1.0053",
+            "Syntax::Keyword::Try" : "0",
+            "System::CPU" : "1.03",
+            "TOML::Tiny" : "0",
+            "perl" : "v5.40.0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::More" : "0.98"
+         }
+      }
+   },
+   "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/marlencrabapple/kareha-psgi/issues"
+      },
+      "homepage" : "https://github.com/marlencrabapple/kareha-psgi",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/marlencrabapple/kareha-psgi.git",
+         "web" : "https://github.com/marlencrabapple/kareha-psgi"
+      }
+   },
+   "version" : "0.01",
+   "x_contributors" : [
+      "Ian P Bradley <marlen.crabapple@gmail.com>"
+   ],
+   "x_serialization_backend" : "JSON::PP version 4.16",
+   "x_static_install" : 1
+}
