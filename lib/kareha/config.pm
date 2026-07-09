@@ -1,4 +1,4 @@
-use Object::Pad qw(:experimental(:all));;
+use Object::Pad qw(:experimental(:all));
 
 package kareha::config;
 role kareha::config;
@@ -6,13 +6,12 @@ role kareha::config;
 use utf8;
 use v5.40;
 
-use Carp;
 use Const::Fast;
 use TOML::Tiny qw(from_toml to_toml);
 use Path::Tiny;
-use Data::Printer;
+use IO::Handle::Common;
 
-const our $S_NOADMIN => 'No \'admin_pass\' defined in the configuration';
+const our $S_NOADMIN  => 'No \'admin_pass\' defined in the configuration';
 const our $S_NOSECRET => 'No \'secret\' defined in the configuration';
 
 const our $config_default_path => path('config.default.toml');
@@ -20,21 +19,33 @@ const our $config_default_path => path('config.default.toml');
 our $_config_default;
 
 try {
-  $_config_default = from_toml($config_default_path->slurp_utf8)
+    $_config_default = from_toml($configdefault_inline)
 }
 catch ($e) {
-  croak $e if $ENV{PRODUCTION};
-  carp $e
+    dmsg $e, $config_default_path->stringify;
+    fatal $e if $ENV{PRODUCTION};
+    error $e
 }
 
+const our $toml = TOML::Tiny->new;
 const our $config_defaults => $_config_default;
 
-field $source :param(open);
-field $config;
+field $config_file : param(config) : param(configfile);
+field $config = {};
 
-ADJUSTPARAMS ($params) {
-  $source = path($source) unless ref $source eq 'Path::Tiny';
-  const our $_config => { %$config_defaults
-                       , from_toml($source->slurp_utf8)->%* };
-  $config = $_config;
+ADJUST : params (:$config_file) {
+    $config_file = path($config_file)
+      unless $config isa 'Path::Tiny';
+    foreach my $file (@$config_file) {
+        $$config{ $config_file->basename } = $toml->encode( $file->slurp_utf8 );
+    }
+};
+
+ADJUSTPARAMS($params) {
+
+    # $config_file = path($config_file) unless ref $config_file eq 'Path::Tiny';
+
+    const my $_config => { %$config_defaults, field $infile = []; };
+
+    $config = $_config;
 }

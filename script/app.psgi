@@ -1,56 +1,59 @@
 #!/usr/bin/env perl
 
+package kareha::psgi::app;
+
 use utf8;
 use v5.40;
 
 use lib 'lib';
 
 use CGI::Compile;
+use CGI::Emulate::PSGI;
+use Const::Fast;
+use CGI::Compile;
 use Plack::Builder;
 use Plack::App::File;
-use CGI::Emulate::PSGI;
-use Plack::Middleware::Auth::Basic;
+use IO::Handle::Common;
+
+# use Plack::Middleware::Auth::Basic;
 use Crypt::Argon2 qw(argon2id_pass argon2_verify);
-use Data::Printer;
 
 use kareha::psgi;
 
-# our $kareha = CGI::Emulate::PSGI->handler(CGI::Compile->compile(
-# 		"lib/kareha/psgi.pm", "kareha"));
-
-# p $kareha;
-
-# our $captcha = CGI::Emulate::PSGI->handler(CGI::Compile->compile(
-# 		"./captcha.pl", "captcha"))
-#                   if $ENV{WAKA_CAPTCHA};
-
-# our $admin = CGI::Emulate::PSGI->handler(CGI::Compile->compile(
-# 		"./admin.pl", "admin"));
+const our $pathre => qr"^
+   /(css|arch|res|thumb|src|img|kareha.js
+   |(?:kareha|favicon)?.ico
+   |(kareha|[0-9]+).html)
+ "xx;
 
 builder {
-  enable "Auth::Basic", authenticator => sub ($user, $pass, $env) {
-    die "No username defined in \$ENV{WAKA_USER}" unless $ENV{WAKA_USER};
-    die "No password hash defined in \$ENV{WAKA_PWHASH}"
-      unless $ENV{WAKA_PWHASH};
+    enable "Auth::Basic", authenticator => sub ( $user, $pass, $env = \%ENV ) {
+        fatal "WAKA_USER is unset, cannot lookup user."
+          unless $ENV{WAKA_USER};
 
-    $user eq $ENV{WAKA_USER}
-      && argon2_verify($ENV{WAKA_PWHASH}, $pass)
-  } unless $ENV{WAKA_NOLOGIN};
+        fatal "WAKA_PWHASH is unset, cannot check check password."
+          unless $ENV{WAKA_PWHASH};
 
- # enable "Plack::Middleware::Devel::StackTrace",
-  enable "Plack::Middleware::Debug",
+        $user eq $ENV{WAKA_USER}
+          && argon2_verify( $ENV{WAKA_PWHASH}, $pass );
+      }
+      unless $ENV{WAKA_NOLOGIN};
 
-  enable "Plack::Middleware::Static",
-    path => qr{^/(css|arch|res|thumb|src|img|kareha.js|(?:kareha|favicon)?.ico|(kareha|[0-9]+).html)},
-    root => './';
+    if ( any { $_ } @ENV{qw(PLACK_DEVELOPMENT PLACK_DEBUG DEBUG)} ) {
+        enable "Plack::Middleware::Devel::StackTrace",
+          enable "Plack::Middleware::Debug";
+    }
 
-  enable "Plack::Middleware::Static",
-    path => '/static',
-    root => 's/';
-  
-  mount "/", Plack::App::File->new(file => 'index.html')->to_app;
+    if ( $ENV{SERVE_HTTP} ) {
+        enable "Plack::Middleware::Static", path => $pathre root => './';
 
-  mount "/kareha.pl", kareha::psgi->new->to_psgi
-  #mount "/admin.pl", $admin;
-  #mount "/captcha.pl", $captcha if $captcha
+        enable "Plack::Middleware::Static",
+          path => '/static',
+          root => 's/';
+
+        mount "/",
+          Plack::App::File->new( file => '$app->config->{index_html}' )->to_app;
+    }
+
+    mount "/kareha.pl", kareha::psgi->new->to_psgi
 }
