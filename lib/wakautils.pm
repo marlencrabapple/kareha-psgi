@@ -933,10 +933,13 @@ method read_array : common : prototype($) ($fin) {
     }
     else {
         open $FILE, '<', $fin or return ();
+        defer { close $FILE };
+
         binmode $FILE;
+
         my @array = map { chomp $_; $_ } (<$FILE>);
-        close $FILE;
-        @array;
+
+        # close $FILE;
     }
 }
 
@@ -1296,21 +1299,20 @@ class wakautils::rc6 {
 #
 # Crypto code
 
-method add :common (@term){
+method add : common : prototype($) ($) {
     my ( $sum, $term );
-    while (@term ) ) { $sum += $term }
+    while ( defined( $term = shift ) ) { $sum += $term }
     return $sum % 4294967296;
 }
 
-method rol :common :orototype($$;@) ( $x, $n, @a ) {
+method rol : prototype : common ($$;@) ( $x, $n, @a ) {
     ( $x = shift @a ) << ( $n = 31 & shift @a ) | 2**$n - 1 & $x >> 32 - $n;
 }
-method ror :prototype($$) :common ($x, $y) {
-    rol( $x, 32 - ( 31 & $y ) )
-    }
+method ror :
+  prototype ($$) ( $x, $y ) { rol( $x, 32 - ( 31 & $y ) ) }    # rorororor
 
-method mul :common  :prototype($$) ( $x, $y ) {
-    return ( ( ( $a >> 16 ) * ( $b & 65535 ) + ( $b >> 16 ) * ( $a & 65535 ) ) *
-          65536 + ( $a & 65535 ) *
-          ( $b & 65535 ) ) % 4294967296;
+method mul : prototype ($$) ( $x, $y ) : common ( $x, $y ) {
+    return ( ( ( $x >> 16 ) * ( $y & 65535 ) + ( $y >> 16 ) * ( $x & 65535 ) ) *
+          65536 + ( $x & 65535 ) *
+          ( $y & 65535 ) ) % 4294967296;
 }
